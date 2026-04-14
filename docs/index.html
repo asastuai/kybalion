@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermetic Computing — Interactive Playground</title>
+<style>
+/* ========================================
+   RESET & BASE
+   ======================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0a0a0a;
+  --black-light: #111111;
+  --black-lighter: #1a1a1a;
+  --gold: #c4a84f;
+  --gold-dim: #8a7535;
+  --gold-glow: rgba(196, 168, 79, 0.15);
+  --gold-glow-strong: rgba(196, 168, 79, 0.35);
+  --white: #e8e4dc;
+  --white-dim: #9a9690;
+  --red: #a04040;
+  --green: #5a9a5a;
+  --blue: #5a7aaa;
+  --font-mono: 'Courier New', 'Consolas', monospace;
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-mono);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--black);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* ========================================
+   BACKGROUND SIGIL
+   ======================================== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(196, 168, 79, 0.03);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(196, 168, 79, 0.03);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.header h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-shadow: 0 0 40px rgba(196, 168, 79, 0.2);
+}
+
+.header .subtitle {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.header .repo-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--gold-dim);
+  text-decoration: none;
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(196, 168, 79, 0.2);
+  padding: 6px 18px;
+  transition: all 0.3s ease;
+}
+.header .repo-link:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(196, 168, 79, 0.1);
+}
+
+.disclaimer-banner {
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  color: var(--white-dim);
+  border-top: 1px solid rgba(196, 168, 79, 0.08);
+  border-bottom: 1px solid rgba(196, 168, 79, 0.08);
+  background: rgba(196, 168, 79, 0.02);
+  letter-spacing: 0.05em;
+}
+
+/* ========================================
+   NAVIGATION
+   ======================================== */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 0 20px;
+  margin: 20px auto 40px;
+  max-width: 700px;
+  border: 1px solid rgba(196, 168, 79, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.nav button {
+  flex: 1;
+  padding: 14px 10px;
+  background: transparent;
+  border: none;
+  color: var(--white-dim);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 60%;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.nav button:hover { color: var(--white); }
+.nav button.active { color: var(--gold); }
+.nav button.active::after { transform: scaleX(1); }
+
+.nav button + button { border-left: 1px solid rgba(196, 168, 79, 0.1); }
+
+/* ========================================
+   LABS CONTAINER
+   ======================================== */
+.labs-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.lab {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+.lab.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+   SHARED COMPONENTS
+   ======================================== */
+.lab-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 6px;
+  letter-spacing: 0.08em;
+}
+
+.lab-desc {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+
+.section {
+  background: var(--black-light);
+  border: 1px solid rgba(196, 168, 79, 0.1);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 0.88rem;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  background: var(--black);
+  border: 1px solid rgba(196, 168, 79, 0.15);
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+input[type="text"]:focus, textarea:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 20px rgba(196, 168, 79, 0.05);
+}
+textarea { resize: vertical; min-height: 60px; }
+
+.output-box {
+  background: var(--black);
+  border: 1px solid rgba(196, 168, 79, 0.1);
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  word-break: break-all;
+  color: var(--gold);
+  min-height: 42px;
+  line-height: 1.5;
+}
+
+.output-label {
+  font-size: 0.85rem;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  padding: 10px 24px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  background: rgba(196, 168, 79, 0.1);
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(196, 168, 79, 0.1);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn.btn-small {
+  padding: 6px 14px;
+  font-size: 0.88rem;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid rgba(196, 168, 79, 0.08);
+  margin: 24px 0;
+}
+
+/* Tabs within a lab */
+.sub-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border: 1px solid rgba(196, 168, 79, 0.1);
+}
+.sub-tab {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  color: var(--white-dim);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sub-tab + .sub-tab { border-left: 1px solid rgba(196, 168, 79, 0.1); }
+.sub-tab:hover { color: var(--white); }
+.sub-tab.active { color: var(--gold); background: rgba(196, 168, 79, 0.05); }
+
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* ========================================
+   PIPELINE VISUALIZATION
+   ======================================== */
+.pipeline {
+  display: flex;
+  gap: 0;
+  margin: 20px 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.pipeline-stage {
+  flex: 1;
+  min-width: 90px;
+  text-align: center;
+  padding: 12px 6px;
+  border: 1px solid rgba(196, 168, 79, 0.08);
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.pipeline-stage + .pipeline-stage { border-left: none; }
+
+.pipeline-stage.active {
+  background: rgba(196, 168, 79, 0.08);
+  border-color: rgba(196, 168, 79, 0.3);
+}
+
+.pipeline-stage.completed {
+  background: rgba(196, 168, 79, 0.04);
+}
+
+.pipeline-stage .stage-num {
+  font-size: 0.8rem;
+  color: var(--gold-dim);
+  margin-bottom: 4px;
+}
+
+.pipeline-stage .stage-name {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  line-height: 1.3;
+}
+
+.pipeline-stage.active .stage-name,
+.pipeline-stage.completed .stage-name {
+  color: var(--gold);
+}
+
+.pipeline-stage .stage-principle {
+  font-size: 0.8rem;
+  color: rgba(196, 168, 79, 0.4);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* ========================================
+   AVALANCHE DIFF
+   ======================================== */
+.bit-diff-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin-top: 12px;
+}
+
+.bit-cell {
+  width: 10px;
+  height: 10px;
+  background: rgba(196, 168, 79, 0.1);
+  transition: background 0.3s ease;
+}
+.bit-cell.flipped {
+  background: var(--gold);
+  box-shadow: 0 0 4px rgba(196, 168, 79, 0.4);
+}
+
+.avalanche-stat {
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-top: 12px;
+}
+
+/* ========================================
+   QUBIT VISUALIZATION
+   ======================================== */
+.qubit-display {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.bloch-container {
+  width: 220px;
+  height: 220px;
+  position: relative;
+}
+
+.bloch-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.qubit-info {
+  min-width: 200px;
+}
+
+.qubit-info .info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(196, 168, 79, 0.06);
+  font-size: 0.8rem;
+}
+.qubit-info .info-row .info-label {
+  color: var(--white-dim);
+}
+.qubit-info .info-row .info-value {
+  color: var(--gold);
+  font-weight: bold;
+}
+
+.prob-bar-container {
+  margin-top: 16px;
+}
+.prob-bar-label {
+  font-size: 0.88rem;
+  color: var(--white-dim);
+  margin-bottom: 4px;
+}
+.prob-bar {
+  height: 6px;
+  background: rgba(196, 168, 79, 0.1);
+  position: relative;
+  margin-bottom: 10px;
+}
+.prob-bar-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.4s ease;
+}
+
+.measurement-result {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--gold);
+  padding: 20px;
+  border: 1px solid rgba(196, 168, 79, 0.2);
+  margin-top: 16px;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  text-shadow: 0 0 20px rgba(196, 168, 79, 0.3);
+}
+
+/* ========================================
+   GEMATRIA TABLE
+   ======================================== */
+.gematria-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.gematria-table th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid rgba(196, 168, 79, 0.15);
+}
+.gematria-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(196, 168, 79, 0.05);
+  color: var(--white);
+}
+.gematria-table td:first-child {
+  font-size: 1.2rem;
+  color: var(--gold);
+  text-align: center;
+  width: 50px;
+}
+.gematria-table td:last-child {
+  color: var(--gold-dim);
+  text-align: right;
+}
+.gematria-table tr:hover td {
+  background: rgba(196, 168, 79, 0.03);
+}
+
+.gematria-result {
+  font-size: 2rem;
+  color: var(--gold);
+  text-align: center;
+  padding: 20px;
+  font-family: var(--font-serif);
+  text-shadow: 0 0 30px rgba(196, 168, 79, 0.2);
+}
+
+.gematria-breakdown {
+  font-size: 0.8rem;
+  color: var(--white-dim);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+.footer {
+  text-align: center;
+  padding: 60px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.kybalion-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  color: var(--gold-dim);
+  max-width: 600px;
+  margin: 0 auto 12px;
+  line-height: 1.8;
+}
+
+.kybalion-source {
+  font-size: 0.85rem;
+  color: rgba(196, 168, 79, 0.4);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.footer-line {
+  width: 60px;
+  height: 1px;
+  background: rgba(196, 168, 79, 0.2);
+  margin: 24px auto;
+}
+
+.footer-meta {
+  font-size: 0.8rem;
+  color: rgba(196, 168, 79, 0.25);
+  letter-spacing: 0.1em;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 600px) {
+  .nav { flex-wrap: wrap; }
+  .nav button { flex: 1 1 50%; }
+  .nav button:nth-child(3) { border-left: none; }
+  .pipeline { flex-wrap: wrap; }
+  .pipeline-stage { min-width: 45%; flex: 1 1 45%; }
+  .pipeline-stage + .pipeline-stage { border-left: 1px solid rgba(196, 168, 79, 0.08); }
+  .pipeline-stage:nth-child(odd) { border-left: none; }
+  .qubit-display { flex-direction: column; }
+  .section { padding: 16px; }
+  .sub-tabs { flex-wrap: wrap; }
+  .sub-tab { flex: 1 1 50%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====================================
+     HEADER
+     ==================================== -->
+<header class="header">
+  <h1>Hermetic Computing</h1>
+  <div class="subtitle">Interactive Playground</div>
+  <a href="https://github.com/asastuai/kybalion" class="repo-link" target="_blank" rel="noopener">View on GitHub</a>
+</header>
+
+<div class="disclaimer-banner">
+  Simplified JS demonstration &mdash; full cryptographic implementation in Rust/WASM
+</div>
+
+<!-- ====================================
+     NAVIGATION
+     ==================================== -->
+<nav class="nav">
+  <button class="active" onclick="switchLab('hash')">Hash Lab</button>
+  <button onclick="switchLab('cipher')">Cipher Lab</button>
+  <button onclick="switchLab('gematria')">Gematria Lab</button>
+  <button onclick="switchLab('qubit')">Qubit Lab</button>
+</nav>
+
+<!-- ====================================
+     LABS
+     ==================================== -->
+<div class="labs-container">
+
+  <!-- ================================
+       HASH LAB
+       ================================ -->
+  <div id="lab-hash" class="lab active">
+    <div class="lab-title">The Hermetic Hash</div>
+    <div class="lab-desc">
+      A 256-bit hash function built from the seven alchemical stages. Each stage corresponds
+      to a hermetic principle. The result: near-perfect avalanche.
+    </div>
+
+    <!-- Sub-tabs -->
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="switchHashTab('single')">Single Hash</button>
+      <button class="sub-tab" onclick="switchHashTab('avalanche')">Avalanche Compare</button>
+    </div>
+
+    <!-- Pipeline visualization -->
+    <div class="section" style="padding: 16px 12px;">
+      <div class="section-title">Alchemical Pipeline</div>
+      <div class="pipeline" id="hash-pipeline">
+        <div class="pipeline-stage" data-stage="0">
+          <div class="stage-num">I</div>
+          <div class="stage-name">Calcination</div>
+          <div class="stage-principle">Mentalism</div>
+        </div>
+        <div class="pipeline-stage" data-stage="1">
+          <div class="stage-num">II</div>
+          <div class="stage-name">Dissolution</div>
+          <div class="stage-principle">Vibration</div>
+        </div>
+        <div class="pipeline-stage" data-stage="2">
+          <div class="stage-num">III</div>
+          <div class="stage-name">Separation</div>
+          <div class="stage-principle">Polarity</div>
+        </div>
+        <div class="pipeline-stage" data-stage="3">
+          <div class="stage-num">IV</div>
+          <div class="stage-name">Conjunction</div>
+          <div class="stage-principle">Correspondence</div>
+        </div>
+        <div class="pipeline-stage" data-stage="4">
+          <div class="stage-num">V</div>
+          <div class="stage-name">Fermentation</div>
+          <div class="stage-principle">Rhythm</div>
+        </div>
+        <div class="pipeline-stage" data-stage="5">
+          <div class="stage-num">VI</div>
+          <div class="stage-name">Distillation</div>
+          <div class="stage-principle">Causality</div>
+        </div>
+        <div class="pipeline-stage" data-stage="6">
+          <div class="stage-num">VII</div>
+          <div class="stage-name">Coagulation</div>
+          <div class="stage-principle">Generation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Single hash panel -->
+    <div id="hash-single" class="sub-panel active">
+      <div class="section">
+        <label for="hash-input">Input</label>
+        <input type="text" id="hash-input" placeholder="Type anything..." oninput="computeHash()">
+        <div class="output-label">256-bit Hermetic Hash (hex)</div>
+        <div class="output-box" id="hash-output">
+          <span style="color: var(--white-dim);">Awaiting input...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avalanche panel -->
+    <div id="hash-avalanche" class="sub-panel">
+      <div class="section">
+        <label for="avalanche-a">Input A</label>
+        <input type="text" id="avalanche-a" placeholder="hello" oninput="computeAvalanche()" value="hello">
+        <div style="height: 12px;"></div>
+        <label for="avalanche-b">Input B</label>
+        <input type="text" id="avalanche-b" placeholder="hallo" oninput="computeAvalanche()" value="hallo">
+
+        <div class="output-label">Hash A</div>
+        <div class="output-box" id="avalanche-hash-a" style="font-size: 0.88rem;"></div>
+        <div class="output-label">Hash B</div>
+        <div class="output-box" id="avalanche-hash-b" style="font-size: 0.88rem;"></div>
+
+        <div class="output-label">Bit Differences (gold = flipped)</div>
+        <div class="bit-diff-display" id="avalanche-bits"></div>
+        <div class="avalanche-stat" id="avalanche-stat"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================
+       CIPHER LAB
+       ================================ -->
+  <div id="lab-cipher" class="lab">
+    <div class="lab-title">The Magnum Opus</div>
+    <div class="lab-desc">
+      The first stream cipher where <em>intent</em> is a cryptographic parameter.
+      Same key, different intent = different ciphertext. The cipher knows your purpose.
+    </div>
+
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="switchCipherTab('encrypt')">Encipher</button>
+      <button class="sub-tab" onclick="switchCipherTab('decrypt')">Decipher</button>
+      <button class="sub-tab" onclick="switchCipherTab('demo')">Intent Demo</button>
+    </div>
+
+    <!-- Encrypt panel -->
+    <div id="cipher-encrypt" class="sub-panel active">
+      <div class="section">
+        <label for="cipher-key">Key</label>
+        <input type="text" id="cipher-key" placeholder="my_secret_key" value="my_secret_key">
+        <div style="height: 10px;"></div>
+        <label for="cipher-intent">Intent</label>
+        <input type="text" id="cipher-intent" placeholder="protect medical records" value="protect medical records">
+        <div style="height: 10px;"></div>
+        <label for="cipher-plaintext">Plaintext</label>
+        <textarea id="cipher-plaintext" rows="3" placeholder="The truth shall set you free">The truth shall set you free</textarea>
+        <div class="btn-row">
+          <button class="btn" onclick="doCipher()">Encipher</button>
+        </div>
+        <div class="output-label">Ciphertext (hex)</div>
+        <div class="output-box" id="cipher-output">
+          <span style="color: var(--white-dim);">Press encipher...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decrypt panel -->
+    <div id="cipher-decrypt" class="sub-panel">
+      <div class="section">
+        <label for="decipher-key">Key</label>
+        <input type="text" id="decipher-key" placeholder="my_secret_key" value="my_secret_key">
+        <div style="height: 10px;"></div>
+        <label for="decipher-intent">Intent</label>
+        <input type="text" id="decipher-intent" placeholder="protect medical records" value="protect medical records">
+        <div style="height: 10px;"></div>
+        <label for="decipher-ciphertext">Ciphertext (hex)</label>
+        <textarea id="decipher-ciphertext" rows="3" placeholder="Paste ciphertext hex here..."></textarea>
+        <div class="btn-row">
+          <button class="btn" onclick="doDecipher()">Decipher</button>
+        </div>
+        <div class="output-label">Recovered Plaintext</div>
+        <div class="output-box" id="decipher-output">
+          <span style="color: var(--white-dim);">Press decipher...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intent demo panel -->
+    <div id="cipher-demo" class="sub-panel">
+      <div class="section">
+        <div class="section-title">Intent changes everything</div>
+        <p style="font-size: 0.8rem; color: var(--white-dim); margin-bottom: 16px;">
+          Same key, same plaintext &mdash; but different intent produces entirely different ciphertext.
+        </p>
+        <label for="demo-key">Key</label>
+        <input type="text" id="demo-key" value="shared_key" oninput="runIntentDemo()">
+        <div style="height: 8px;"></div>
+        <label for="demo-plain">Plaintext</label>
+        <input type="text" id="demo-plain" value="sensitive data" oninput="runIntentDemo()">
+        <div style="height: 8px;"></div>
+        <label for="demo-intent1">Intent A</label>
+        <input type="text" id="demo-intent1" value="protect medical records" oninput="runIntentDemo()">
+        <div style="height: 8px;"></div>
+        <label for="demo-intent2">Intent B</label>
+        <input type="text" id="demo-intent2" value="conceal financial data" oninput="runIntentDemo()">
+
+        <div class="output-label">Ciphertext A</div>
+        <div class="output-box" id="demo-out-a" style="font-size: 0.88rem;"></div>
+        <div class="output-label">Ciphertext B</div>
+        <div class="output-box" id="demo-out-b" style="font-size: 0.88rem;"></div>
+        <div class="output-label">Match?</div>
+        <div class="output-box" id="demo-match"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================
+       GEMATRIA LAB
+       ================================ -->
+  <div id="lab-gematria" class="lab">
+    <div class="lab-title">Hebrew Gematria</div>
+    <div class="lab-desc">
+      Correspondence: words map to numbers. The ancient mapping &mdash; letters to numeric values &mdash;
+      formalized as a trait. Type Hebrew text to see its numeric essence.
+    </div>
+
+    <div class="section">
+      <label for="gematria-input">Hebrew Text</label>
+      <input type="text" id="gematria-input" placeholder="אמת" dir="rtl"
+             style="font-size: 1.4rem; text-align: right;" oninput="computeGematria()">
+      <div style="height: 4px;"></div>
+      <div style="font-size: 0.85rem; color: var(--white-dim);">
+        Try: אמת (Emet/Truth = 441) &nbsp;|&nbsp; חיים (Chaim/Life = 68) &nbsp;|&nbsp; שלום (Shalom/Peace = 376)
+      </div>
+
+      <div class="gematria-result" id="gematria-result">
+        <span style="color: var(--white-dim); font-size: 1rem;">Enter Hebrew text above</span>
+      </div>
+      <div class="gematria-breakdown" id="gematria-breakdown"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Reference Table &mdash; Standard Hebrew Gematria Values</div>
+      <div style="overflow-x: auto;">
+        <table class="gematria-table">
+          <thead>
+            <tr><th>Letter</th><th>Name</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>א</td><td>Aleph</td><td>1</td></tr>
+            <tr><td>ב</td><td>Bet</td><td>2</td></tr>
+            <tr><td>ג</td><td>Gimel</td><td>3</td></tr>
+            <tr><td>ד</td><td>Dalet</td><td>4</td></tr>
+            <tr><td>ה</td><td>He</td><td>5</td></tr>
+            <tr><td>ו</td><td>Vav</td><td>6</td></tr>
+            <tr><td>ז</td><td>Zayin</td><td>7</td></tr>
+            <tr><td>ח</td><td>Chet</td><td>8</td></tr>
+            <tr><td>ט</td><td>Tet</td><td>9</td></tr>
+            <tr><td>י</td><td>Yod</td><td>10</td></tr>
+            <tr><td>כ / ך</td><td>Kaf / Final</td><td>20</td></tr>
+            <tr><td>ל</td><td>Lamed</td><td>30</td></tr>
+            <tr><td>מ / ם</td><td>Mem / Final</td><td>40</td></tr>
+            <tr><td>נ / ן</td><td>Nun / Final</td><td>50</td></tr>
+            <tr><td>ס</td><td>Samekh</td><td>60</td></tr>
+            <tr><td>ע</td><td>Ayin</td><td>70</td></tr>
+            <tr><td>פ / ף</td><td>Pe / Final</td><td>80</td></tr>
+            <tr><td>צ / ץ</td><td>Tsade / Final</td><td>90</td></tr>
+            <tr><td>ק</td><td>Qof</td><td>100</td></tr>
+            <tr><td>ר</td><td>Resh</td><td>200</td></tr>
+            <tr><td>ש</td><td>Shin</td><td>300</td></tr>
+            <tr><td>ת</td><td>Tav</td><td>400</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================
+       QUBIT LAB
+       ================================ -->
+  <div id="lab-qubit" class="lab">
+    <div class="lab-title">Qubit Lab</div>
+    <div class="lab-desc">
+      Polarity: "Opposites are identical in nature, but different in degree."
+      A qubit holds both |0&#10217; and |1&#10217; simultaneously. Observe how gates transform
+      the state, and how measurement collapses superposition.
+    </div>
+
+    <div class="section">
+      <div class="section-title">Prepare State</div>
+      <div class="btn-row">
+        <button class="btn" onclick="setQubit(1,0)">|0&#10217;</button>
+        <button class="btn" onclick="setQubit(0,1)">|1&#10217;</button>
+        <button class="btn" onclick="setQubit(1/Math.SQRT2, 1/Math.SQRT2)">|+&#10217;</button>
+        <button class="btn" onclick="setQubit(1/Math.SQRT2, -1/Math.SQRT2)">|&minus;&#10217;</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">State Visualization</div>
+      <div class="qubit-display">
+        <div class="bloch-container">
+          <canvas id="bloch-canvas" class="bloch-canvas" width="440" height="440"></canvas>
+        </div>
+        <div class="qubit-info">
+          <div class="info-row">
+            <span class="info-label">State</span>
+            <span class="info-value" id="qubit-state-label">|0&#10217;</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Alpha (&alpha;)</span>
+            <span class="info-value" id="qubit-alpha">1.000</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Beta (&beta;)</span>
+            <span class="info-value" id="qubit-beta">0.000</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Phase (&phi;)</span>
+            <span class="info-value" id="qubit-phase">0.000 rad</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Theta (&theta;)</span>
+            <span class="info-value" id="qubit-theta">0.000 rad</span>
+          </div>
+
+          <div class="prob-bar-container">
+            <div class="prob-bar-label">P(|0&#10217;) = <span id="prob-0-val">100.0%</span></div>
+            <div class="prob-bar"><div class="prob-bar-fill" id="prob-0-bar" style="width: 100%;"></div></div>
+            <div class="prob-bar-label">P(|1&#10217;) = <span id="prob-1-val">0.0%</span></div>
+            <div class="prob-bar"><div class="prob-bar-fill" id="prob-1-bar" style="width: 0%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Gates &amp; Measurement</div>
+      <div class="btn-row">
+        <button class="btn" onclick="applyHadamard()">Hadamard (H)</button>
+        <button class="btn" onclick="applyPauliX()">Pauli-X (NOT)</button>
+        <button class="btn" onclick="applyPauliZ()">Pauli-Z</button>
+        <button class="btn" onclick="applyPhaseS()">S Gate (&pi;/2)</button>
+        <button class="btn" onclick="applyPhaseT()">T Gate (&pi;/4)</button>
+      </div>
+      <div class="btn-row" style="margin-top: 16px;">
+        <button class="btn" onclick="measureQubit()" style="border-color: var(--gold); background: rgba(196, 168, 79, 0.08);">
+          Measure (collapse)
+        </button>
+      </div>
+      <div class="measurement-result" id="measurement-result">
+        <span style="color: var(--white-dim); font-size: 0.9rem;">Not yet measured</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ====================================
+     FOOTER
+     ==================================== -->
+<footer class="footer">
+  <div class="footer-line"></div>
+  <div class="kybalion-quote">
+    "The Principles of Truth are Seven; he who knows these, understandingly,
+    possesses the Magic Key before whose touch all the Doors of the Temple fly open."
+  </div>
+  <div class="kybalion-source">The Kybalion</div>
+  <div class="footer-line"></div>
+  <div class="footer-meta">
+    Hermetic Computing &mdash; The seven principles, formalized as cryptographic primitives
+  </div>
+</footer>
+
+<!-- ====================================
+     JAVASCRIPT
+     ==================================== -->
+<script>
+// =========================================
+// NAVIGATION
+// =========================================
+function switchLab(name) {
+  document.querySelectorAll('.lab').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('lab-' + name).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name)) b.classList.add('active');
+  });
+  // Trigger initial computations
+  if (name === 'hash') computeHash();
+  if (name === 'gematria') computeGematria();
+  if (name === 'cipher') runIntentDemo();
+  if (name === 'qubit') drawBloch();
+}
+
+function switchHashTab(tab) {
+  document.querySelectorAll('#lab-hash .sub-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#lab-hash .sub-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`#hash-${tab}`).classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'avalanche') computeAvalanche();
+}
+
+function switchCipherTab(tab) {
+  document.querySelectorAll('#lab-cipher .sub-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#lab-cipher .sub-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`#cipher-${tab}`).classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'demo') runIntentDemo();
+}
+
+// =========================================
+// HERMETIC HASH (simplified JS)
+// =========================================
+// This is a simplified demonstration.
+// The full cryptographic implementation lives in Rust.
+
+function textToBytes(text) {
+  return new TextEncoder().encode(text);
+}
+
+function bytesToHex(bytes) {
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToBytes(hex) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+  }
+  return bytes;
+}
+
+// Stage I: Calcination (Mentalism) — reduce to essence
+function calcination(data) {
+  const state = new Float64Array(32);
+  for (let i = 0; i < data.length; i++) {
+    state[i % 32] += data[i] * (i + 1);
+    state[(i * 7) % 32] ^= data[i];
+  }
+  // Pad with primes if input is short
+  const primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131];
+  for (let i = 0; i < 32; i++) {
+    state[i] += primes[i] * (data.length + 1);
+  }
+  return state;
+}
+
+// Stage II: Dissolution (Vibration) — DFT-like frequency decomposition
+function dissolution(state) {
+  const N = state.length;
+  const freq = new Float64Array(N);
+  for (let k = 0; k < N; k++) {
+    let re = 0;
+    for (let n = 0; n < N; n++) {
+      const angle = (2 * Math.PI * k * n) / N;
+      re += state[n] * Math.cos(angle);
+    }
+    freq[k] = re;
+  }
+  return freq;
+}
+
+// Stage III: Separation (Polarity) — split into opposing components
+function separation(state) {
+  const result = new Float64Array(32);
+  for (let i = 0; i < 32; i++) {
+    const positive = Math.abs(state[i]);
+    const negative = Math.abs(state[(31 - i)]);
+    result[i] = positive - negative + Math.sin(positive * negative * 0.001) * 256;
+  }
+  return result;
+}
+
+// Stage IV: Conjunction (Correspondence) — combine as above so below
+function conjunction(state) {
+  const result = new Float64Array(32);
+  for (let i = 0; i < 16; i++) {
+    const above = state[i];
+    const below = state[i + 16];
+    result[i] = above * Math.cos(below * 0.01) + below * Math.sin(above * 0.01);
+    result[i + 16] = below * Math.cos(above * 0.01) + above * Math.sin(below * 0.01);
+  }
+  return result;
+}
+
+// Stage V: Fermentation (Rhythm) — cyclic mixing
+function fermentation(state) {
+  const result = new Float64Array(32);
+  for (let round = 0; round < 4; round++) {
+    for (let i = 0; i < 32; i++) {
+      const prev = state[(i + 31) % 32];
+      const next = state[(i + 1) % 32];
+      result[i] = state[i] + Math.sin(prev * 0.1) * Math.cos(next * 0.1) * 100;
+      result[i] += Math.sin((round + 1) * state[i] * 0.001) * 50;
+    }
+    for (let i = 0; i < 32; i++) state[i] = result[i];
+  }
+  return result;
+}
+
+// Stage VI: Distillation (Causality) — each byte depends on all prior
+function distillation(state) {
+  const result = new Float64Array(32);
+  let accumulator = 0;
+  for (let i = 0; i < 32; i++) {
+    accumulator += state[i];
+    result[i] = state[i] + Math.sin(accumulator * 0.0001) * 128;
+    accumulator = accumulator * 1.0001 + result[i] * 0.01;
+  }
+  return result;
+}
+
+// Stage VII: Coagulation (Generation) — fold to final bytes
+function coagulation(state) {
+  const output = new Uint8Array(32);
+  for (let i = 0; i < 32; i++) {
+    // Map float to byte range with non-linear folding
+    let v = state[i];
+    v = Math.sin(v * 0.001) * 1e8;
+    v = ((v % 256) + 256) % 256;
+    output[i] = Math.floor(v) & 0xFF;
+  }
+  return output;
+}
+
+function hermeticHash(input) {
+  const data = typeof input === 'string' ? textToBytes(input) : input;
+  let state;
+  state = calcination(data);        // I
+  state = dissolution(state);        // II
+  state = separation(state);         // III
+  state = conjunction(state);        // IV
+  state = fermentation(state);       // V
+  state = distillation(state);       // VI
+  const output = coagulation(state); // VII
+  return output;
+}
+
+// Animate pipeline stages
+let pipelineTimer = null;
+function animatePipeline(callback) {
+  const stages = document.querySelectorAll('#hash-pipeline .pipeline-stage');
+  stages.forEach(s => { s.classList.remove('active', 'completed'); });
+
+  if (pipelineTimer) clearInterval(pipelineTimer);
+  let current = 0;
+  pipelineTimer = setInterval(() => {
+    if (current > 0) stages[current - 1].classList.replace('active', 'completed');
+    if (current < 7) {
+      stages[current].classList.add('active');
+      current++;
+    } else {
+      clearInterval(pipelineTimer);
+      pipelineTimer = null;
+      if (callback) callback();
+    }
+  }, 80);
+}
+
+function computeHash() {
+  const input = document.getElementById('hash-input').value;
+  const outputEl = document.getElementById('hash-output');
+  if (!input) {
+    outputEl.innerHTML = '<span style="color: var(--white-dim);">Awaiting input...</span>';
+    // Reset pipeline
+    document.querySelectorAll('#hash-pipeline .pipeline-stage').forEach(s => {
+      s.classList.remove('active', 'completed');
+    });
+    return;
+  }
+  animatePipeline(() => {
+    const hash = hermeticHash(input);
+    outputEl.textContent = bytesToHex(hash);
+  });
+}
+
+function computeAvalanche() {
+  const a = document.getElementById('avalanche-a').value;
+  const b = document.getElementById('avalanche-b').value;
+  if (!a || !b) return;
+
+  const hashA = hermeticHash(a);
+  const hashB = hermeticHash(b);
+
+  document.getElementById('avalanche-hash-a').textContent = bytesToHex(hashA);
+  document.getElementById('avalanche-hash-b').textContent = bytesToHex(hashB);
+
+  // Compute bit differences
+  const bitsEl = document.getElementById('avalanche-bits');
+  bitsEl.innerHTML = '';
+  let flipped = 0;
+  const totalBits = 256;
+
+  for (let i = 0; i < 32; i++) {
+    const xor = hashA[i] ^ hashB[i];
+    for (let bit = 7; bit >= 0; bit--) {
+      const cell = document.createElement('div');
+      cell.className = 'bit-cell';
+      if ((xor >> bit) & 1) {
+        cell.classList.add('flipped');
+        flipped++;
+      }
+      bitsEl.appendChild(cell);
+    }
+  }
+
+  const ratio = (flipped / totalBits).toFixed(4);
+  const percent = (flipped / totalBits * 100).toFixed(1);
+  document.getElementById('avalanche-stat').textContent =
+    `${flipped} / ${totalBits} bits flipped (${percent}%) — avalanche ratio: ${ratio}`;
+
+  // Also animate pipeline
+  animatePipeline();
+}
+
+// =========================================
+// MAGNUM OPUS CIPHER (simplified JS)
+// =========================================
+
+function generateKeystream(key, intent, length) {
+  // Derive a seed from key + intent using our hash
+  const combined = key + '::' + intent;
+  const seed = hermeticHash(combined);
+
+  // Generate keystream using the seed as state
+  const stream = new Uint8Array(length);
+  const state = new Float64Array(32);
+  for (let i = 0; i < 32; i++) state[i] = seed[i];
+
+  for (let i = 0; i < length; i++) {
+    // Evolve state
+    const idx = i % 32;
+    state[idx] = (state[idx] * 1.0001 + Math.sin(state[(idx + 1) % 32] * 0.01 + i) * 128);
+    state[(idx + 7) % 32] += Math.cos(state[idx] * 0.001) * 64;
+    const v = Math.sin(state[idx] * 0.0001 + state[(idx + 13) % 32] * 0.00001) * 1e8;
+    stream[i] = (((v % 256) + 256) % 256) & 0xFF;
+  }
+  return stream;
+}
+
+function encipher(key, intent, plaintext) {
+  const data = textToBytes(plaintext);
+  const stream = generateKeystream(key, intent, data.length);
+  const cipher = new Uint8Array(data.length);
+  for (let i = 0; i < data.length; i++) {
+    cipher[i] = data[i] ^ stream[i];
+  }
+  return cipher;
+}
+
+function decipher(key, intent, cipherBytes) {
+  const stream = generateKeystream(key, intent, cipherBytes.length);
+  const plain = new Uint8Array(cipherBytes.length);
+  for (let i = 0; i < cipherBytes.length; i++) {
+    plain[i] = cipherBytes[i] ^ stream[i];
+  }
+  return new TextDecoder().decode(plain);
+}
+
+function doCipher() {
+  const key = document.getElementById('cipher-key').value;
+  const intent = document.getElementById('cipher-intent').value;
+  const plaintext = document.getElementById('cipher-plaintext').value;
+  if (!key || !intent || !plaintext) return;
+
+  const cipherBytes = encipher(key, intent, plaintext);
+  const hex = bytesToHex(cipherBytes);
+  document.getElementById('cipher-output').textContent = hex;
+
+  // Auto-fill decipher panel
+  document.getElementById('decipher-ciphertext').value = hex;
+}
+
+function doDecipher() {
+  const key = document.getElementById('decipher-key').value;
+  const intent = document.getElementById('decipher-intent').value;
+  const hex = document.getElementById('decipher-ciphertext').value.trim();
+  if (!key || !intent || !hex) return;
+
+  try {
+    const cipherBytes = hexToBytes(hex);
+    const plaintext = decipher(key, intent, cipherBytes);
+    document.getElementById('decipher-output').textContent = plaintext;
+  } catch (e) {
+    document.getElementById('decipher-output').innerHTML =
+      '<span style="color: var(--red);">Invalid hex input</span>';
+  }
+}
+
+function runIntentDemo() {
+  const key = document.getElementById('demo-key').value;
+  const plain = document.getElementById('demo-plain').value;
+  const i1 = document.getElementById('demo-intent1').value;
+  const i2 = document.getElementById('demo-intent2').value;
+  if (!key || !plain || !i1 || !i2) return;
+
+  const c1 = encipher(key, i1, plain);
+  const c2 = encipher(key, i2, plain);
+  const hex1 = bytesToHex(c1);
+  const hex2 = bytesToHex(c2);
+
+  document.getElementById('demo-out-a').textContent = hex1;
+  document.getElementById('demo-out-b').textContent = hex2;
+
+  const match = hex1 === hex2;
+  const matchEl = document.getElementById('demo-match');
+  if (i1 === i2) {
+    matchEl.innerHTML = '<span style="color: var(--gold);">Same intent = identical ciphertext</span>';
+  } else {
+    matchEl.innerHTML = '<span style="color: var(--green);">Different intent = completely different ciphertext</span>';
+  }
+}
+
+// =========================================
+// GEMATRIA
+// =========================================
+const HEBREW_VALUES = {
+  'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
+  'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
+  'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90,
+  'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
+};
+
+const HEBREW_NAMES = {
+  'א': 'Aleph', 'ב': 'Bet', 'ג': 'Gimel', 'ד': 'Dalet', 'ה': 'He', 'ו': 'Vav',
+  'ז': 'Zayin', 'ח': 'Chet', 'ט': 'Tet', 'י': 'Yod', 'כ': 'Kaf', 'ך': 'Final Kaf',
+  'ל': 'Lamed', 'מ': 'Mem', 'ם': 'Final Mem', 'נ': 'Nun', 'ן': 'Final Nun',
+  'ס': 'Samekh', 'ע': 'Ayin', 'פ': 'Pe', 'ף': 'Final Pe', 'צ': 'Tsade', 'ץ': 'Final Tsade',
+  'ק': 'Qof', 'ר': 'Resh', 'ש': 'Shin', 'ת': 'Tav'
+};
+
+function computeGematria() {
+  const input = document.getElementById('gematria-input').value.trim();
+  const resultEl = document.getElementById('gematria-result');
+  const breakdownEl = document.getElementById('gematria-breakdown');
+
+  if (!input) {
+    resultEl.innerHTML = '<span style="color: var(--white-dim); font-size: 1rem;">Enter Hebrew text above</span>';
+    breakdownEl.textContent = '';
+    return;
+  }
+
+  let total = 0;
+  const parts = [];
+  let hasError = false;
+
+  for (const ch of input) {
+    if (ch === ' ' || ch === '\u200F' || ch === '\u200E') continue; // skip spaces and direction marks
+    const val = HEBREW_VALUES[ch];
+    if (val !== undefined) {
+      total += val;
+      parts.push(`${ch}(${val})`);
+    } else {
+      hasError = true;
+    }
+  }
+
+  if (hasError && parts.length === 0) {
+    resultEl.innerHTML = '<span style="color: var(--red); font-size: 0.9rem;">No Hebrew characters found</span>';
+    breakdownEl.textContent = '';
+    return;
+  }
+
+  resultEl.textContent = total;
+  breakdownEl.innerHTML = parts.join(' + ') +
+    (hasError ? ' <span style="color: var(--red);">(some non-Hebrew characters ignored)</span>' : '');
+}
+
+// =========================================
+// QUBIT
+// =========================================
+let qubitAlpha = { re: 1, im: 0 }; // complex amplitude for |0>
+let qubitBeta  = { re: 0, im: 0 }; // complex amplitude for |1>
+
+function complexMag(c) { return Math.sqrt(c.re * c.re + c.im * c.im); }
+function complexPhase(c) { return Math.atan2(c.im, c.re); }
+function complexMul(a, b) {
+  return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re };
+}
+function complexAdd(a, b) { return { re: a.re + b.re, im: a.im + b.im }; }
+function complexScale(c, s) { return { re: c.re * s, im: c.im * s }; }
+
+function setQubit(alpha, beta) {
+  qubitAlpha = { re: alpha, im: 0 };
+  qubitBeta = { re: beta, im: 0 };
+  updateQubitDisplay();
+}
+
+function applyGate(a00, a01, a10, a11) {
+  const newAlpha = complexAdd(complexMul(a00, qubitAlpha), complexMul(a01, qubitBeta));
+  const newBeta  = complexAdd(complexMul(a10, qubitAlpha), complexMul(a11, qubitBeta));
+  qubitAlpha = newAlpha;
+  qubitBeta = newBeta;
+  updateQubitDisplay();
+}
+
+function applyHadamard() {
+  const s = 1 / Math.SQRT2;
+  applyGate({re:s,im:0}, {re:s,im:0}, {re:s,im:0}, {re:-s,im:0});
+}
+
+function applyPauliX() {
+  applyGate({re:0,im:0}, {re:1,im:0}, {re:1,im:0}, {re:0,im:0});
+}
+
+function applyPauliZ() {
+  applyGate({re:1,im:0}, {re:0,im:0}, {re:0,im:0}, {re:-1,im:0});
+}
+
+function applyPhaseS() {
+  applyGate({re:1,im:0}, {re:0,im:0}, {re:0,im:0}, {re:0,im:1});
+}
+
+function applyPhaseT() {
+  const v = 1/Math.SQRT2;
+  applyGate({re:1,im:0}, {re:0,im:0}, {re:0,im:0}, {re:v,im:v});
+}
+
+function measureQubit() {
+  const p0 = complexMag(qubitAlpha) ** 2;
+  const result = Math.random() < p0 ? 0 : 1;
+
+  // Collapse
+  if (result === 0) {
+    qubitAlpha = { re: 1, im: 0 };
+    qubitBeta = { re: 0, im: 0 };
+  } else {
+    qubitAlpha = { re: 0, im: 0 };
+    qubitBeta = { re: 1, im: 0 };
+  }
+
+  const el = document.getElementById('measurement-result');
+  el.innerHTML = `Collapsed to |${result}&#10217;`;
+  el.style.animation = 'none';
+  el.offsetHeight; // trigger reflow
+  el.style.animation = 'fadeIn 0.3s ease';
+
+  updateQubitDisplay();
+}
+
+function getStateLabel() {
+  const a = complexMag(qubitAlpha);
+  const b = complexMag(qubitBeta);
+  const eps = 0.001;
+
+  if (Math.abs(a - 1) < eps && b < eps) return '|0\u27E9';
+  if (a < eps && Math.abs(b - 1) < eps) return '|1\u27E9';
+
+  const s = 1 / Math.SQRT2;
+  if (Math.abs(a - s) < eps && Math.abs(b - s) < eps) {
+    if (Math.abs(qubitBeta.re - s) < eps && Math.abs(qubitBeta.im) < eps) return '|+\u27E9';
+    if (Math.abs(qubitBeta.re + s) < eps && Math.abs(qubitBeta.im) < eps) return '|-\u27E9';
+    if (Math.abs(qubitBeta.im - s) < eps && Math.abs(qubitBeta.re) < eps) return '|i\u27E9';
+    if (Math.abs(qubitBeta.im + s) < eps && Math.abs(qubitBeta.re) < eps) return '|-i\u27E9';
+  }
+
+  // General state
+  const aStr = a.toFixed(2);
+  const bStr = b.toFixed(2);
+  return `${aStr}|0\u27E9 + ${bStr}|1\u27E9`;
+}
+
+function updateQubitDisplay() {
+  const p0 = complexMag(qubitAlpha) ** 2;
+  const p1 = complexMag(qubitBeta) ** 2;
+
+  // Bloch sphere angles
+  const theta = 2 * Math.acos(Math.min(1, complexMag(qubitAlpha)));
+  const phi = complexPhase(qubitBeta) - complexPhase(qubitAlpha);
+
+  document.getElementById('qubit-state-label').innerHTML = getStateLabel();
+  document.getElementById('qubit-alpha').textContent = complexMag(qubitAlpha).toFixed(4);
+  document.getElementById('qubit-beta').textContent = complexMag(qubitBeta).toFixed(4);
+  document.getElementById('qubit-phase').textContent = phi.toFixed(4) + ' rad';
+  document.getElementById('qubit-theta').textContent = theta.toFixed(4) + ' rad';
+
+  document.getElementById('prob-0-val').textContent = (p0 * 100).toFixed(1) + '%';
+  document.getElementById('prob-1-val').textContent = (p1 * 100).toFixed(1) + '%';
+  document.getElementById('prob-0-bar').style.width = (p0 * 100) + '%';
+  document.getElementById('prob-1-bar').style.width = (p1 * 100) + '%';
+
+  // Reset measurement display
+  document.getElementById('measurement-result').innerHTML =
+    '<span style="color: var(--white-dim); font-size: 0.9rem;">Not yet measured</span>';
+
+  drawBloch();
+}
+
+// =========================================
+// BLOCH SPHERE RENDERING
+// =========================================
+function drawBloch() {
+  const canvas = document.getElementById('bloch-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const r = Math.min(cx, cy) - 40;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Bloch sphere angles
+  const theta = 2 * Math.acos(Math.min(1, complexMag(qubitAlpha)));
+  const phi = complexPhase(qubitBeta) - complexPhase(qubitAlpha);
+
+  // 3D -> 2D projection (simple oblique)
+  const bx = Math.sin(theta) * Math.cos(phi);
+  const by = Math.sin(theta) * Math.sin(phi);
+  const bz = Math.cos(theta);
+
+  // Project: x -> right, y -> depth (slight), z -> up
+  function project(x3, y3, z3) {
+    return [
+      cx + (x3 * 0.9 + y3 * 0.3) * r,
+      cy - (z3 * 0.9 - y3 * 0.2) * r
+    ];
+  }
+
+  // Draw sphere outline
+  ctx.strokeStyle = 'rgba(196, 168, 79, 0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r, r, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Equator ellipse
+  ctx.strokeStyle = 'rgba(196, 168, 79, 0.08)';
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r * 0.9, r * 0.25, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Vertical ellipse (xz plane)
+  ctx.beginPath();
+  for (let t = 0; t <= Math.PI * 2; t += 0.05) {
+    const px = Math.cos(t);
+    const pz = Math.sin(t);
+    const [sx, sy] = project(px, 0, pz);
+    if (t === 0) ctx.moveTo(sx, sy);
+    else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(196, 168, 79, 0.15)';
+  ctx.setLineDash([4, 4]);
+
+  // Z axis
+  const [zt_x, zt_y] = project(0, 0, 1.15);
+  const [zb_x, zb_y] = project(0, 0, -1.15);
+  ctx.beginPath(); ctx.moveTo(zt_x, zt_y); ctx.lineTo(zb_x, zb_y); ctx.stroke();
+
+  // X axis
+  const [xl_x, xl_y] = project(-1.1, 0, 0);
+  const [xr_x, xr_y] = project(1.1, 0, 0);
+  ctx.beginPath(); ctx.moveTo(xl_x, xl_y); ctx.lineTo(xr_x, xr_y); ctx.stroke();
+
+  // Y axis
+  const [yf_x, yf_y] = project(0, -1.1, 0);
+  const [yb_x, yb_y] = project(0, 1.1, 0);
+  ctx.beginPath(); ctx.moveTo(yf_x, yf_y); ctx.lineTo(yb_x, yb_y); ctx.stroke();
+
+  ctx.setLineDash([]);
+
+  // Axis labels
+  ctx.font = '16px Georgia';
+  ctx.fillStyle = 'rgba(196, 168, 79, 0.5)';
+  ctx.fillText('|0\u27E9', zt_x - 8, zt_y - 6);
+  ctx.fillText('|1\u27E9', zb_x - 8, zb_y + 16);
+  ctx.fillText('|+\u27E9', xr_x + 4, xr_y + 4);
+  ctx.fillText('|-\u27E9', xl_x - 20, xl_y + 4);
+
+  // State vector
+  const [sx, sy] = project(bx, by, bz);
+
+  // Line from center to state
+  ctx.strokeStyle = 'rgba(196, 168, 79, 0.6)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(sx, sy);
+  ctx.stroke();
+
+  // State dot
+  ctx.fillStyle = '#c4a84f';
+  ctx.shadowColor = 'rgba(196, 168, 79, 0.6)';
+  ctx.shadowBlur = 12;
+  ctx.beginPath();
+  ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Outer glow ring
+  ctx.strokeStyle = 'rgba(196, 168, 79, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(sx, sy, 10, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+// =========================================
+// INIT
+// =========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Initial hash computation
+  computeHash();
+  computeAvalanche();
+
+  // Initial qubit render
+  drawBloch();
+
+  // Handle window resize for canvas
+  window.addEventListener('resize', drawBloch);
+
+  // Run intent demo with defaults
+  setTimeout(runIntentDemo, 100);
+});
+</script>
+
+</body>
+</html>
