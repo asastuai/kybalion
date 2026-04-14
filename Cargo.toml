@@ -1,0 +1,16 @@
+[package]
+name = "hermetic"
+version = "0.1.0"
+edition = "2021"
+description = "Hermetic Computing Framework — The Seven Principles as computational primitives"
+license = "MIT"
+repository = ""
+authors = ["Juan <openclaw>"]
+keywords = ["cryptography", "hermetic", "hash", "post-quantum"]
+categories = ["cryptography"]
+
+[dependencies]
+num-traits = "0.2"
+
+[dev-dependencies]
+# Post-quantum crypto integration will come in Phase 2
