@@ -9,3 +9,6 @@
 
 pub mod principles;
 pub mod composition;
+
+#[cfg(feature = "wasm")]
+pub mod wasm;

@@ -11,6 +11,16 @@ categories = ["cryptography"]
 
 [dependencies]
 num-traits = "0.2"
+wasm-bindgen = { version = "0.2", optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+
+[features]
+default = []
+wasm = ["wasm-bindgen", "serde", "serde_json"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
 
 [dev-dependencies]
 # Post-quantum crypto integration will come in Phase 2
