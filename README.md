@@ -4,6 +4,8 @@
 
 Not metaphor. Not aesthetic. Operational.
 
+**[Try the Interactive Playground](https://asastuai.github.io/kybalion/)** | [Whitepaper](WHITEPAPER.md) | [Genesis](GENESIS.md) | [Research](RESEARCH.md) | [Paper (arXiv)](paper/hermetic-computing.md)
+
 ```
 Avalanche ratio: 0.5001 (ideal: 0.5000)
 Collisions:      0 in 1000 inputs
