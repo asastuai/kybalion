@@ -181,7 +181,7 @@ This framework was conceived and built in a single session. A conversation about
 
 The answer is yes. Every principle maps. Every test passes. The Stone is real.
 
-Read the full story and technical details in the [Whitepaper](WHITEPAPER.md).
+Read the full story in [Genesis](GENESIS.md). Read the science in the [Whitepaper](WHITEPAPER.md).
 
 ---
 
