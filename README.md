@@ -100,8 +100,8 @@ assert!(EmergentNumber::transcends(&r, &a, &b)); // true
 ## Quick Start
 
 ```bash
-git clone https://github.com/juanclaw/hermetic-computing.git
-cd hermetic-computing
+git clone https://github.com/asastuai/kybalion.git
+cd kybalion
 cargo test    # 87 tests, 0 failures
 cargo run --bin hermetic   # Full demonstration
 cargo run --bin purify     # Avalanche analysis
