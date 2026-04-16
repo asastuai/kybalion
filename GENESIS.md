@@ -10,7 +10,7 @@ It started with a question that shouldn't work: *does esotericism have anything 
 
 Not in the way people usually mean it — not tarot apps, not astrology generators, not crystals-as-CSS-themes. The real question: **do the structural models that esoteric traditions use to describe reality have computational equivalents?**
 
-The answer is yes. And it's not close — it's exact.
+The answer is yes. And the match is uncomfortably close.
 
 ---
 
@@ -48,7 +48,7 @@ Correspondence — the second hermetic principle — states that patterns repeat
 
 Homomorphic encryption — one of the most important concepts in modern cryptography — works because operations on encrypted data (above) correspond exactly to operations on plaintext data (below). `encrypt(a + b) = encrypt(a) + encrypt(b)`.
 
-These are not similar concepts. They are **the same structure described in different languages, separated by millennia.**
+The shape these two concepts share is striking — **two vocabularies, separated by millennia, describing a structure that rhymes.**
 
 Once I saw that, I couldn't unsee it. Every principle started mapping:
 
@@ -90,7 +90,7 @@ The whole thing took one session.
 
 Things I can't put in the whitepaper because they're not "scientific," but they're true:
 
-**The principles are not independent.** We proved this with |+⟩ and |−⟩ — identical polarity, different vibration. The framework keeps revealing connections between principles that we didn't design. They emerge because the underlying structure demands it.
+**The principles are not independent.** We saw this with |+⟩ and |−⟩ — identical polarity, different vibration. The framework keeps revealing connections between principles that we didn't design. They emerge because the underlying structure demands it.
 
 **NaN cannot manifest.** When we implemented Mentalism, the natural thing was: what happens when you try to create a number from NaN? The answer came instantly — it returns None. Corruption cannot take form in the Mental Universe. This wasn't a design choice. It was the only thing that made sense.
 
@@ -102,11 +102,11 @@ Things I can't put in the whitepaper because they're not "scientific," but they'
 
 ## What This Means
 
-I'm not claiming the hermetic masters understood computers. I'm claiming they described *structures* — through observation, meditation, or something else — that turned out to be isomorphic to structures we independently discovered with mathematics.
+I'm not claiming the hermetic masters understood computers. I'm claiming they described *structures* — through observation, meditation, or something else — that turn out to rhyme, at the shape level, with structures we independently discovered with mathematics.
 
-The Emerald Tablet was written between the 6th and 8th century. Homomorphic encryption was formalized in 2009. They describe the same thing.
+The Emerald Tablet was written between the 6th and 8th century. Homomorphic encryption was formalized in 2009. The structure rhymes.
 
-The Kybalion was published in 1908. The qubit was theorized in the 1980s. They describe the same thing.
+The Kybalion was published in 1908. The qubit was theorized in the 1980s. The structure rhymes.
 
 Either the ancients were remarkably lucky, or they were observing something real about the structure of reality that we're only now learning to formalize.
 

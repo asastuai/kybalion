@@ -1,24 +1,24 @@
-# Research Notes: Structural Isomorphisms Between Hermetic Principles and Computational Primitives
+# Research Notes: Structural Correspondences Between Hermetic Principles and Computational Primitives
 
-> *Working document. Each isomorphism is documented with: hermetic source, computational equivalent, experimental proof from the codebase, and implications.*
+> *Working document. Each correspondence is documented with: hermetic source, computational analogue, experimental illustration from the codebase, and implications.*
 
 ---
 
 ## Table of Contents
 
 1. [Methodology](#1-methodology)
-2. [Isomorphism I: Correspondence = Homomorphism](#2-isomorphism-i-correspondence--homomorphism)
-3. [Isomorphism II: Gematria = Hash Function](#3-isomorphism-ii-gematria--hash-function)
-4. [Isomorphism III: Polarity = Qubit](#4-isomorphism-iii-polarity--qubit)
-5. [Isomorphism IV: Hadamard = Solve et Coagula](#5-isomorphism-iv-hadamard--solve-et-coagula)
-6. [Isomorphism V: Vibration = Fourier Transform](#6-isomorphism-v-vibration--fourier-transform)
-7. [Isomorphism VI: Pendulum Neutralization = Constant-Time Execution](#7-isomorphism-vi-pendulum-neutralization--constant-time-execution)
-8. [Isomorphism VII: Period of Rhythm = Shor's Period-Finding](#8-isomorphism-vii-period-of-rhythm--shors-period-finding)
-9. [Isomorphism VIII: Causal Chain = Blockchain](#9-isomorphism-viii-causal-chain--blockchain)
-10. [Isomorphism IX: Generative/Formative = GAN](#10-isomorphism-ix-generativeformative--gan)
-11. [Discovery: Polarity-Vibration Entanglement](#11-discovery-polarity-vibration-entanglement)
-12. [Discovery: Emergence is Computationally Provable](#12-discovery-emergence-is-computationally-provable)
-13. [Discovery: Intent as Cryptographic Parameter](#13-discovery-intent-as-cryptographic-parameter)
+2. [Correspondence I: Correspondence and Homomorphism](#2-correspondence-i-correspondence-and-homomorphism)
+3. [Correspondence II: Gematria and Hash Function](#3-correspondence-ii-gematria-and-hash-function)
+4. [Correspondence III: Polarity and the Qubit](#4-correspondence-iii-polarity-and-the-qubit)
+5. [Correspondence IV: Hadamard and Solve et Coagula](#5-correspondence-iv-hadamard-and-solve-et-coagula)
+6. [Correspondence V: Vibration and Fourier Transform](#6-correspondence-v-vibration-and-fourier-transform)
+7. [Correspondence VI: Pendulum Neutralization and Constant-Time Execution](#7-correspondence-vi-pendulum-neutralization-and-constant-time-execution)
+8. [Correspondence VII: Period of Rhythm and Shor's Period-Finding](#8-correspondence-vii-period-of-rhythm-and-shors-period-finding)
+9. [Correspondence VIII: Causal Chain and Blockchain](#9-correspondence-viii-causal-chain-and-blockchain)
+10. [Correspondence IX: Generative/Formative and GAN](#10-correspondence-ix-generativeformative-and-gan)
+11. [Observation: Polarity-Vibration Phase Independence](#11-observation-polarity-vibration-phase-independence)
+12. [Observation: Composition Can Produce New Properties](#12-observation-composition-can-produce-new-properties)
+13. [Observation: Intent as Naming for a Nonce-like Parameter](#13-observation-intent-as-naming-for-a-nonce-like-parameter)
 14. [Experimental Results: Hermetic Hash](#14-experimental-results-hermetic-hash)
 15. [Open Questions](#15-open-questions)
 16. [References](#16-references)
@@ -27,26 +27,26 @@
 
 ## 1. Methodology
 
-### 1.1 What constitutes an isomorphism?
+### 1.1 What constitutes a correspondence?
 
-We use "isomorphism" in the algebraic sense: a structure-preserving bijection between two domains. For our purposes, we claim isomorphism when:
+We use "correspondence" to denote a structural analogy between a hermetic concept and an existing computational concept. A correspondence is claimed when:
 
-1. **Structural mapping**: the hermetic concept and the computational concept share the same abstract structure (same relationships, same operations, same constraints)
-2. **Operational equivalence**: implementing one as code produces behavior indistinguishable from the other
-3. **Testable**: the correspondence is not just conceptual — it can be verified by running code
+1. **Structural parallel**: the two concepts share a recognisable abstract shape (similar relationships, operations, or constraints).
+2. **Executable illustration**: the parallel can be made concrete in code — readers can run the mapping.
+3. **Contestable**: the analogy is offered as a reading, not as a formal proof. Readers may accept or reject it on the basis of the shape, without needing to accept the framing as mathematics.
 
 We do NOT claim:
 - That hermetic practitioners understood computation
-- That the isomorphism implies historical causation
+- That the correspondence implies historical causation
 - That our implementations are cryptographically secure (they are proofs of concept)
 
-### 1.2 What constitutes a discovery?
+### 1.2 What constitutes an observation?
 
-A "discovery" is something that emerged from the implementation that we did not design or anticipate. It appeared because the structural mapping demanded it.
+An "observation" is a pattern that emerged while implementing the framework — something we noticed rather than designed in advance.
 
 ### 1.3 Reproducibility
 
-Every claim in this document can be verified by running:
+Every claim in this document can be inspected by running:
 
 ```bash
 git clone https://github.com/asastuai/kybalion.git
@@ -54,11 +54,11 @@ cd kybalion
 cargo test
 ```
 
-Test names are cited inline. All 87 tests pass on Rust 1.94.0 (stable).
+Test names are cited inline. All 87 tests pass on Rust 1.94.0 (stable). These are correctness tests, not security tests.
 
 ---
 
-## 2. Isomorphism I: Correspondence = Homomorphism
+## 2. Correspondence I: Correspondence and Homomorphism
 
 ### Hermetic Source
 
@@ -70,7 +70,7 @@ Test names are cited inline. All 87 tests pass on Rust 1.94.0 (stable).
 
 The principle states that the **same patterns** manifest across all planes of existence. Understanding a pattern at one level grants understanding at all levels, because the **structure is preserved** across the mapping.
 
-### Computational Equivalent
+### Computational Analogue
 
 A **homomorphism** is a structure-preserving map between algebraic structures. For groups (G, *) and (H, +):
 
@@ -99,7 +99,7 @@ The trait captures both directions of the hermetic mapping:
 - `descend` = "as above, so below" (map downward)
 - `Gap` = what is lost in translation (the mystery)
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `emerald_tablet_proof`** (`src/principles/correspondence.rs`)
 
@@ -114,7 +114,7 @@ Where `veil` is the correspondence mapping (the "encryption"):
 - Above: 135 + 151 = 286
 - Descended: 286 - 2*93 = 100
 
-The operation above (addition of veiled values) **corresponds exactly** to the operation below (addition of plaintext values). Verified for all input pairs tested including edge cases (0, MAX).
+The operation above (addition of veiled values) **corresponds** to the operation below (addition of plaintext values). Verified for all input pairs tested including edge cases (0, MAX).
 
 **Test: `correspondence_is_composable`**
 
@@ -125,19 +125,19 @@ If A↔B and B↔C, then A↔C. Demonstrated with `ComposedCorrespondence`:
 
 Roundtrip verified: `[7,0,0,0,0,0,0,0]` → 107 → `[7,0,0,0,0,0,0,0]`.
 
-### The Key Insight
+### The Structural Parallel
 
-The hermetic Principle of Correspondence and the mathematical concept of homomorphism are not merely analogous — they describe the **same structural property**: a mapping between domains that preserves the relationships (operations) within those domains. The Emerald Tablet, written over a millennium ago, describes the foundational property of modern homomorphic encryption.
+The hermetic Principle of Correspondence and the mathematical concept of group homomorphism share the same abstract shape: a mapping between two domains that preserves the operations defined within those domains. A millennium-old hermetic maxim and the defining property of modern homomorphic encryption describe the same structural pattern, in two vocabularies.
 
 ### Implications
 
-- FHE schemes can be understood (and potentially designed) using hermetic intuition about "planes"
-- The `Gap` type in our trait formalizes what hermeticism calls "the mystery" — the information lost in translation between planes. In FHE, this corresponds to noise growth in ciphertext operations.
-- Composability of correspondences (multi-plane mapping) suggests novel key agreement protocols where parties establish correspondences through intermediate planes.
+- FHE schemes can be explained using hermetic intuition about "planes"
+- The `Gap` type in our trait names what hermeticism calls "the mystery" — the information lost in translation between planes. In FHE, this corresponds to noise growth in ciphertext operations.
+- Composability of correspondences (multi-plane mapping) suggests pedagogical framings for protocols where parties establish relations through intermediate planes.
 
 ---
 
-## 3. Isomorphism II: Gematria = Hash Function
+## 3. Correspondence II: Gematria and Hash Function
 
 ### Hermetic Source
 
@@ -157,14 +157,14 @@ Hebrew Gematria is a system assigning numeric values to Hebrew letters:
 
 A word's gematric value is the sum of its letters. Words sharing the same value are considered to have a hidden connection.
 
-### Computational Equivalent
+### Computational Analogue
 
 A **hash function** maps variable-length input to fixed-size output:
 - Easy to compute forward (word → number)
 - Difficult or impossible to invert (number → which word?)
 - Many inputs map to the same output (collisions)
 
-### Experimental Proof
+### Experimental Illustration
 
 **Tests: `hebrew_gematria_aleph`, `hebrew_gematria_word`**
 
@@ -181,26 +181,26 @@ A **hash function** maps variable-length input to fixed-size output:
 gematria.descend(&441) → Err(GematriaError::DescentRequiresContext)
 ```
 
-The number 441 could correspond to many different words. Descent (inversion) is impossible without additional information. This is the **preimage resistance** property of hash functions.
+The number 441 could correspond to many different words. Descent (inversion) is impossible without additional information. This matches the **preimage resistance** property of hash functions.
 
-### The Key Insight
+### The Structural Parallel
 
-Gematria IS a hash function:
+Gematria functions as a hash, in the technical sense:
 - **Deterministic**: same word always yields same number
 - **One-way**: easy to compute, impossible to uniquely invert
-- **Collision-prone**: multiple words share the same value (this is a feature in Kabbalistic analysis, not a bug)
-- The Kabbalistic practice of finding words with equal gematric values is exactly **collision analysis**
+- **Collision-prone**: multiple words share the same value (a feature of Kabbalistic analysis, not a bug)
+- The Kabbalistic practice of finding words with equal gematric values parallels what cryptanalysts call **collision analysis**
 
-The cabalistas were doing cryptanalysis millennia before the field was named.
+The Kabbalists were performing something that resembles cryptanalysis long before the field was named.
 
 ### Implications
 
 - Gematric "equivalences" between words can be studied as a pre-modern hash collision table
-- The hermetic insight that "words with the same number share hidden meaning" could inspire new approaches to semantic hashing where collisions are meaningful rather than problematic
+- The insight that "words with the same number share hidden meaning" could inspire pedagogical approaches to semantic hashing where collisions are meaningful rather than problematic
 
 ---
 
-## 4. Isomorphism III: Polarity = Qubit
+## 4. Correspondence III: Polarity and the Qubit
 
 ### Hermetic Source
 
@@ -209,14 +209,14 @@ The cabalistas were doing cryptanalysis millennia before the field was named.
 
 The crucial insight: opposites are **not binary**. They are extremes of a **continuous spectrum**. Hot and cold are both temperature at different degrees. Love and hate are both passion at different degrees.
 
-### Computational Equivalent
+### Computational Analogue
 
 A **qubit** |ψ⟩ = α|0⟩ + β|1⟩ exists on the Bloch sphere:
 - |0⟩ and |1⟩ are the poles
 - Any point on the sphere is a valid state (superposition)
 - The state is parameterized by two angles: θ (pole position) and φ (phase)
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `qubit_zero_is_negative_pole`**
 
@@ -243,15 +243,15 @@ assert!((q.prob_zero() - 0.5).abs() < 1e-10); // equal probability of both poles
 
 **Test: `qubit_is_polarity`**
 
-The `Qubit` struct implements the `Polarity` trait **without any adapter or wrapper**. It satisfies the trait naturally because a qubit IS a polar entity.
+The `Qubit` struct implements the `Polarity` trait **without any adapter or wrapper** — it fits the trait naturally.
 
 **Test: `qubit_probabilities_sum_to_one`**
 
 Born rule conservation verified for all tested states: `P(|0⟩) + P(|1⟩) = 1.000`.
 
-### The Key Insight
+### The Structural Parallel
 
-The hermetic description of polarity (continuous spectrum between two poles, not boolean) is **structurally identical** to the qubit model of quantum computing. This is not a loose analogy — the `Qubit` type satisfies the `Polarity` trait without modification because they describe the same mathematical structure:
+The hermetic description of polarity (continuous spectrum between two poles, not boolean) can be read as structurally analogous to the qubit model of quantum computing. The `Qubit` type satisfies the `Polarity` trait without modification because they fit the same abstract shape:
 
 | Hermetic Polarity | Qubit |
 |---|---|
@@ -264,13 +264,13 @@ The hermetic description of polarity (continuous spectrum between two poles, not
 
 ### Implications
 
-- Quantum algorithms could be understood through hermetic polarity theory
-- The `SpectralValue` type (our boolean replacement) could serve as a classical simulation of quantum logic
-- "Polar transmutation" (moving along the spectrum) corresponds exactly to quantum gate rotations
+- Quantum algorithms can be explained through the vocabulary of hermetic polarity
+- The `SpectralValue` type (our boolean replacement) could serve as a classical illustration of quantum-like logic
+- "Polar transmutation" (moving along the spectrum) is analogous to quantum gate rotations
 
 ---
 
-## 5. Isomorphism IV: Hadamard = Solve et Coagula
+## 5. Correspondence IV: Hadamard and Solve et Coagula
 
 ### Hermetic Source
 
@@ -279,7 +279,7 @@ The hermetic description of polarity (continuous spectrum between two poles, not
 - **Coagula**: reconstitute the components into a new, purified form (collapse possibility into new certainty)
 - The same operation dissolves AND reconstitutes — it is self-inverse
 
-### Computational Equivalent
+### Computational Analogue
 
 The **Hadamard gate** H is a quantum gate with matrix:
 
@@ -293,7 +293,7 @@ Properties:
 - H|+⟩ = |0⟩ (superposition → pure state)
 - H² = I (self-inverse: applying it twice returns to the original)
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `hadamard_is_solve_et_coagula`**
 
@@ -316,24 +316,24 @@ let reconstituted = decipher(key, intent, &dissolved); // Coagula
 assert_eq!(reconstituted, message);                    // H(H(x)) = x
 ```
 
-### The Key Insight
+### The Structural Parallel
 
-The Hadamard gate performs exactly the operation that alchemists described:
-1. Takes a definite state (fixed substance) → dissolves it into superposition (all possibilities)
-2. Takes a superposition (dissolved matter) → reconstitutes it into a definite state (new substance)
-3. Is its own inverse — dissolution IS reconstitution, viewed from different planes
+The Hadamard gate performs an operation whose shape matches the alchemical description of Solve et Coagula:
+1. Takes a definite state → dissolves it into superposition
+2. Takes a superposition → reconstitutes it into a definite state
+3. Is its own inverse — H² = I
 
-This is not metaphor. The mathematical operation H² = I and the alchemical principle that Solve et Coagula is a single bidirectional operation are **the same statement** in different notation.
+The mathematical operation H² = I (the Hadamard gate is an involution) and the alchemical pattern of Solve et Coagula as a single bidirectional act share the same formal shape. Many operations are involutions (NOT, XOR-with-fixed-key, bit-reversal); Hadamard is one particularly elegant example.
 
 ### Implications
 
-- Other alchemical operations (calcination, fermentation, etc.) may map to other quantum gates
-- The self-inverse property (H² = I) could be a design criterion for new quantum gates inspired by alchemical symmetry
-- Our Hermetic Hash uses all seven alchemical operations as computational stages — this suggests a complete mapping between alchemical processes and quantum circuits
+- Other alchemical operations (calcination, fermentation, etc.) may map to other quantum gates as pedagogical framings
+- The self-inverse property (H² = I) is a useful shape criterion when looking for operations analogous to alchemical symmetry
+- Our Hermetic Hash uses all seven alchemical operations as computational stages — the alchemical vocabulary is used here as a composition guide, not a security claim
 
 ---
 
-## 6. Isomorphism V: Vibration = Fourier Transform
+## 6. Correspondence V: Vibration and Fourier Transform
 
 ### Hermetic Source
 
@@ -342,7 +342,7 @@ This is not metaphor. The mathematical operation H² = I and the alchemical prin
 
 > *"The differences between different manifestations of Matter, Energy, Mind, and even Spirit, result largely from varying rates of Vibration."*
 
-### Computational Equivalent
+### Computational Analogue
 
 The **Discrete Fourier Transform** (DFT) decomposes any signal into its constituent frequencies:
 
@@ -356,7 +356,7 @@ The inverse (IDFT) reconstructs the original signal from frequencies:
 x[n] = (1/N) Σ X[k] * e^(j2πkn/N)
 ```
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `spectrum_roundtrip`**
 
@@ -389,13 +389,13 @@ assert!(Spectrum::from_bytes(&complex).energy() >
         Spectrum::from_bytes(&simple).energy());
 ```
 
-More complex information has higher vibrational energy — exactly as hermetic theory predicts.
+More complex information has higher vibrational energy — a useful pedagogical framing.
 
 ### Technical Note: The DFT Roundtrip Bug
 
 During implementation, we initially used only N/2+1 frequency bins (the Nyquist half). This produced a corrupted reconstruction: `[72, 115, 101, 109, 114, 101]` instead of `[72, 101, 114, 109, 101, 115]` — the values were present but reordered.
 
-**The fix required using ALL N frequency bins.** This is hermeneutically significant: you cannot reconstruct matter from a partial spectrum. The FULL vibrational picture is required for perfect materialization. There are no shortcuts in the descent from vibration to matter.
+**The fix required using ALL N frequency bins.** Framed hermetically: you cannot reconstruct matter from a partial spectrum. The FULL vibrational picture is required for perfect materialization.
 
 Additionally, the sign convention of the IDFT required careful attention — the forward DFT negates the imaginary component (`imag -= sample * sin(angle)`), so the inverse must also negate to produce the correct conjugate. The direction of the spiral (clockwise vs counterclockwise) matters when moving between planes.
 
@@ -403,12 +403,12 @@ Additionally, the sign convention of the IDFT required careful attention — the
 
 - Data has an intrinsic "vibrational fingerprint" that reveals hidden structure
 - Frequency-domain operations can reveal patterns invisible in the spatial domain
-- The Hermetic Hash uses DFT as its "Dissolution" stage — this is the principled choice, not an arbitrary one
+- The Hermetic Hash uses DFT as its "Dissolution" stage — a principled choice of vocabulary, not a security argument
 - Quantum computing operates natively in the frequency domain (QFT is central to quantum algorithms)
 
 ---
 
-## 7. Isomorphism VI: Pendulum Neutralization = Constant-Time Execution
+## 7. Correspondence VI: Pendulum Neutralization and Constant-Time Execution
 
 ### Hermetic Source
 
@@ -417,13 +417,13 @@ Additionally, the sign convention of the IDFT required careful attention — the
 
 The Law of Neutralization: a master who understands the rhythm can dampen the pendulum swing, preventing it from affecting them.
 
-### Computational Equivalent
+### Computational Analogue
 
 **Constant-time execution** is a technique in cryptography where operations take the same amount of time regardless of input. This prevents **timing side-channel attacks**, where an attacker measures HOW LONG an operation takes to infer secret information.
 
 Variable-time code oscillates (fast for some inputs, slow for others). Constant-time code neutralizes this oscillation.
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `full_dampening_is_stillness`**
 
@@ -446,7 +446,7 @@ dampened.dampen(0.5); // 50% dampened
 // dampened.value() = 0.5 (half swing)
 ```
 
-### The Key Insight
+### The Structural Parallel
 
 | Hermetic Concept | Cryptographic Concept |
 |---|---|
@@ -456,16 +456,16 @@ dampened.dampen(0.5); // 50% dampened
 | The master dampens the swing | The developer eliminates timing variance |
 | Full neutralization = stillness | Perfectly constant time = no leakage |
 
-A cryptographer writing constant-time code IS a hermetic master neutralizing the pendulum. The intent is identical: prevent an observer from gaining information from the rhythm of your operations.
+A cryptographer writing constant-time code does in software what the hermetic master does by analogy: prevent an observer from gaining information from the rhythm of operations.
 
 ### Implications
 
-- Timing attacks could be analyzed as "rhythm analysis" — finding the hidden period in execution times
-- The `compensate()` function on the `Rhythm` trait returns the exact compensating force needed — this could model the specific engineering changes needed to make a given code path constant-time
+- Timing attacks can be framed as "rhythm analysis" — finding the hidden period in execution times
+- The `compensate()` function on the `Rhythm` trait returns the compensating force needed — a way of modelling the engineering changes required to make a given code path constant-time
 
 ---
 
-## 8. Isomorphism VII: Period of Rhythm = Shor's Period-Finding
+## 8. Correspondence VII: Period of Rhythm and Shor's Period-Finding
 
 ### Hermetic Source
 
@@ -474,13 +474,13 @@ A cryptographer writing constant-time code IS a hermetic master neutralizing the
 
 Everything has a period. Finding the period reveals the fundamental nature of the rhythm.
 
-### Computational Equivalent
+### Computational Analogue
 
 **Shor's algorithm** breaks RSA encryption by finding the **period** of the function f(x) = a^x mod N. Once the period r is known, the factorization of N follows directly.
 
 The period-finding step uses the **Quantum Fourier Transform** — which brings us back to Vibration (Principle III). The principles compose.
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `detect_periodic_signal`**
 
@@ -492,31 +492,31 @@ let detection = detect_period(&signal).unwrap();
 assert_eq!(detection.period % 10, 0); // finds the hidden period
 ```
 
-Our autocorrelation-based period detector finds the hidden rhythm in data — the same fundamental operation (find the period) that Shor's algorithm performs via QFT.
+Our autocorrelation-based period detector finds the hidden rhythm in data — the same fundamental shape of operation (find the period) that Shor's algorithm performs via QFT.
 
-### The Key Insight
+### The Structural Parallel
 
-RSA's security rests on the assumption that finding the period of modular exponentiation is hard. Shor's algorithm breaks this by using quantum superposition (Polarity) and QFT (Vibration) to find the period (Rhythm). Three hermetic principles working together to solve a problem that classical computation cannot.
+RSA's security rests on the assumption that finding the period of modular exponentiation is hard. Shor's algorithm breaks this by using quantum superposition and QFT to find the period. In hermetic vocabulary: three principles — Polarity, Vibration, Rhythm — composing to solve a problem that classical computation cannot.
 
 ### Implications
 
 - Post-quantum cryptography must resist period-finding attacks — systems whose security depends on hidden rhythms are vulnerable to quantum analysis
-- The hermetic framework provides a natural vocabulary for understanding WHY quantum computers break classical crypto: they can perceive rhythms that classical computers cannot
+- The hermetic framework offers a natural vocabulary for explaining WHY quantum computers break classical crypto: they can perceive rhythms that classical computers cannot
 
 ---
 
-## 9. Isomorphism VIII: Causal Chain = Blockchain
+## 9. Correspondence VIII: Causal Chain and Blockchain
 
 ### Hermetic Source
 
 > *"Every Cause has its Effect; every Effect has its Cause; everything happens according to Law; Chance is but a name for Law not recognized."*
 > — The Kybalion (1908), Chapter XII
 
-### Computational Equivalent
+### Computational Analogue
 
 A **blockchain** is a causal chain: each block contains the hash of the previous block, creating an immutable, traceable sequence of causation. Every state is derived from a prior state. Nothing exists without a cause.
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `causal_chain_traces_lineage`**
 
@@ -530,7 +530,7 @@ assert_eq!(lineage.len(), 3);     // full chain traceable
 assert_eq!(lineage[2].depth, 0);  // traces back to genesis
 ```
 
-### The Key Insight
+### The Structural Parallel
 
 The `Causal<T>` type wraps any value with its complete provenance. Every value knows:
 - Its unique ID (deterministic, content-based)
@@ -538,11 +538,11 @@ The `Causal<T>` type wraps any value with its complete provenance. Every value k
 - Its depth in the causal chain
 - Its parents' IDs
 
-This is structurally identical to a blockchain transaction with its Merkle path. Nakamoto's Bitcoin (2008) implements the Sixth Hermetic Principle as a distributed ledger.
+This shares the same abstract shape as a blockchain transaction with its Merkle path. Nakamoto's Bitcoin (2008) can be read, through the hermetic lens, as instantiating the Principle of Cause and Effect as a distributed ledger.
 
 ---
 
-## 10. Isomorphism IX: Generative/Formative = GAN
+## 10. Correspondence IX: Generative/Formative and GAN
 
 ### Hermetic Source
 
@@ -553,7 +553,7 @@ The Seventh Principle describes creation through two complementary forces:
 - **Generative** (masculine/projective): expands, radiates, projects possibilities
 - **Formative** (feminine/receptive): selects, shapes, constrains, gives form
 
-### Computational Equivalent
+### Computational Analogue
 
 A **Generative Adversarial Network** (GAN):
 - **Generator**: produces candidate outputs from noise (generative/projective)
@@ -561,7 +561,7 @@ A **Generative Adversarial Network** (GAN):
 
 > *Goodfellow, I. et al. "Generative Adversarial Nets." NeurIPS 2014.*
 
-### Experimental Proof
+### Experimental Illustration
 
 **Test: `generation_trait_contract`**
 
@@ -588,7 +588,7 @@ for (i, candidate) in candidates.iter().enumerate() {
 }
 ```
 
-### The Key Insight
+### The Structural Parallel
 
 | Hermetic | GAN | Our KeyForge |
 |---|---|---|
@@ -599,7 +599,7 @@ for (i, candidate) in candidates.iter().enumerate() {
 
 ---
 
-## 11. Discovery: Polarity-Vibration Entanglement
+## 11. Observation: Polarity-Vibration Phase Independence
 
 ### What we found
 
@@ -628,13 +628,13 @@ assert!((q.phi - shifted.phi).abs() > 0.1);                 // different phase
 
 ### Significance
 
-This was NOT designed. It emerged from implementing Polarity and applying it to qubits. It shows that **the hermetic principles are not independent** — they are entangled, just as qubits can be entangled with each other.
+This was NOT designed in. It emerged from implementing Polarity and applying it to qubits. Read through the hermetic lens, it suggests that the principles are not independent: phase (Vibration) can distinguish states that polarity alone cannot tell apart.
 
-The phase (Vibration) is the "hidden variable" that distinguishes states that Polarity alone cannot tell apart. This suggests a **hierarchy of principles** where Vibration operates at a finer resolution than Polarity.
+This is a standard property of the Hadamard basis in quantum mechanics — our contribution is vocabulary: naming the axes "polarity" and "vibration" and noticing that they can be varied independently.
 
 ---
 
-## 12. Discovery: Emergence is Computationally Provable
+## 12. Observation: Composition Can Produce New Properties
 
 ### What we found
 
@@ -653,7 +653,7 @@ let result = EmergentNumber::emerge(&a, &b); // value: 4
 assert!(result.has_property("perfect_square"));
 assert!(!a.has_property("perfect_square")); // neither input had this
 assert!(!b.has_property("perfect_square")); // neither input had this
-assert!(EmergentNumber::transcends(&result, &a, &b)); // proven: result > sum of parts
+assert!(EmergentNumber::transcends(&result, &a, &b)); // output has properties absent from inputs
 ```
 
 Additional cases verified:
@@ -662,17 +662,17 @@ Additional cases verified:
 
 ### Significance
 
-This is a **computational definition of emergence**: the `transcends()` function returns `true` when the output has properties absent from all inputs. This formalizes anti-reductionism: the whole is provably greater than the sum of its parts.
+This implements one operational definition of emergence: the `transcends()` function returns `true` when the output has properties absent from all inputs. This offers one concrete illustration of a phenomenon long studied in complexity theory and systems science: composition can produce properties absent from parts.
 
-This has implications beyond this framework — any system that needs to detect or measure emergence can use this pattern.
+The pattern has uses beyond this framework — any system that wants a simple runtime test for "did composition add a property that neither input had" can reuse this shape.
 
 ---
 
-## 13. Discovery: Intent as Cryptographic Parameter
+## 13. Observation: Intent as Naming for a Nonce-like Parameter
 
 ### What we found
 
-The Magnum Opus cipher takes two inputs: **key** and **intent**. Same key with different intent produces cryptographically distinct keystreams.
+The Magnum Opus cipher takes two inputs: **key** and **intent**. Same key with different intent produces distinct keystreams.
 
 ### Proof
 
@@ -689,20 +689,20 @@ assert_ne!(c1, c2); // same key, different intent = different ciphertext
 ```rust
 let ciphertext = encipher(b"key", b"right_intent", plaintext);
 let wrong = decipher(b"key", b"wrong_intent", &ciphertext);
-assert_ne!(plaintext.to_vec(), wrong); // wrong intent = corrupted output
+assert_ne!(plaintext.to_vec(), wrong); // mismatched intent = different bytes
 ```
 
 ### Prior Art Search
 
-We searched for "intent-aware cryptography", "purpose-bound encryption", and "semantic intent as cryptographic parameter" in academic literature. **No prior publication uses semantic intent as a cryptographic parameter that shapes the keystream.** Attribute-Based Encryption (ABE) uses policy attributes for access control, but the attributes control WHO can decrypt, not HOW the encryption operates. Our intent parameter modifies the encryption itself.
+We did not find prior work that explicitly frames a key-derivation input as "semantic intent". Functionally, this is a naming/UX choice: the input behaves as additional key material (nonce- or salt-like). Rigorous purpose-binding in cryptography is developed formally in Attribute-Based Encryption (Sahai & Waters, 2005) and Functional Encryption (Boneh, Sahai & Waters, 2011). Those constructions have formal security definitions, proofs, and algebraic machinery; our work does not belong to that lineage.
 
 ### Significance
 
-This is a genuinely novel cryptographic concept. A ciphertext is bound not just to a key but to a **purpose**. Use cases:
+This is a framing / UX contribution, not a cryptographic novelty. The cipher does not parse or evaluate the meaning of the intent string — it mixes its bytes into the key derivation. The use-cases below are illustrative of the *naming*, not of mathematical purpose enforcement:
 
-- **Medical records**: encrypt with intent "clinical treatment" — the same key used with intent "insurance review" cannot decrypt
-- **AI agent authorization**: an agent's key works only with the intent for which it was authorized
-- **Regulatory compliance**: demonstrate that data was encrypted for a specific purpose, cryptographically
+- **Medical records**: encrypting with intent "clinical treatment" distinguishes this session from sessions labelled differently. An application using this for compliance must still have independent policy and audit; the cipher does not enforce compliance mathematically.
+- **AI agent authorization**: an agent's key is bound to the intent string supplied. This is authorization via naming convention, not cryptographic policy enforcement.
+- **Regulatory compliance**: this naming convention does not replace formal access-control cryptography (ABE/FE) where such guarantees are required.
 
 ---
 
@@ -715,6 +715,8 @@ The Hermetic Hash was tested using three standard cryptographic quality metrics:
 1. **Avalanche Effect**: flip one input bit, measure how many output bits change. Ideal: 50%.
 2. **Byte Distribution**: hash many inputs, count output byte frequencies. Ideal: uniform.
 3. **Collision Resistance**: hash sequential inputs, check for duplicates. Ideal: zero collisions.
+
+These are correctness-adjacent metrics. They do not constitute a security analysis.
 
 ### Results
 
@@ -744,6 +746,8 @@ The Hermetic Hash was tested using three standard cryptographic quality metrics:
 | Inputs tested | 1000 sequential |
 | Collisions found | 0 |
 
+**Caveat.** These metrics are single-platform. The hash's internal use of floating-point arithmetic precludes bit-identical output across platforms, compilers, or math libraries.
+
 ### Purification Process
 
 The initial avalanche ratio was 0.4993. Per-byte analysis revealed:
@@ -770,28 +774,28 @@ Unknown. It has not been subjected to formal cryptanalysis. The avalanche and di
 
 ### Q2: Can Correspondence accommodate lattice-based PQC?
 
-Theoretically yes. The `Correspondence` trait should accept `Correspondence<LatticeCiphertext, Plaintext>` where the Gap type represents noise growth. Implementing this with CRYSTALS-Kyber is the next concrete step.
+Theoretically yes. The `Correspondence` trait should accept `Correspondence<LatticeCiphertext, Plaintext>` where the Gap type represents noise growth. Implementing this with CRYSTALS-Kyber is a concrete future step.
 
-### Q3: Is intent-aware encryption formally definable?
+### Q3: Is intent-framed encryption formally definable?
 
-We need a formal security model. Possible approach: define IND-CPA security parameterized by intent — an adversary who knows the key but not the intent should not be able to distinguish ciphertexts of chosen plaintexts.
+This is the honest question to ask, now that we have dropped the "novel cryptographic category" framing. A formal direction worth exploring: define IND-CPA security parameterized by intent — an adversary who knows the key but not the intent should not be able to distinguish ciphertexts of chosen plaintexts. Any such formalization would almost certainly reduce to existing formalisms (ABE, FE, or simply IND-CPA with intent as an additional key input).
 
-### Q4: Are there more isomorphisms?
+### Q4: Are there more correspondences?
 
-Almost certainly. We have not explored:
+Likely. We have not explored:
 - Alchemical sulfur/mercury/salt → computational triple
 - The Tree of Life (Kabbalah) as a computation graph
 - Tarot major arcana as state transitions
 - I Ching hexagrams as a 6-bit encoding system with built-in error detection
 
-### Q5: Why do the principles map so precisely?
+### Q5: Why do the correspondences read so cleanly?
 
-This is the deepest question and we do not have an answer. Either:
+This is the deepest question and we do not have an answer. Possibilities:
 1. The hermetic observers identified genuine structural features of reality that are substrate-independent (appearing in both physical and computational domains)
-2. Human cognition imposes structure on both domains, and the isomorphism is in our minds rather than in reality
-3. Information processing IS the substrate of reality, and both hermetic and computational models are partial descriptions of the same underlying process
+2. Human cognition imposes structure on both domains, and the correspondence is in our minds rather than in reality
+3. Information processing is a deep substrate of reality, and both hermetic and computational models are partial descriptions of the same underlying process
 
-The code does not answer this question. But the code does compile.
+The code does not answer this question. But the code compiles.
 
 ---
 
@@ -819,33 +823,35 @@ The code does not answer this question. But the code does compile.
 
 9. Sahai, A. and Waters, B. "Fuzzy Identity-Based Encryption." *EUROCRYPT 2005*, LNCS vol. 3494, pp. 457-473, 2005. Foundation of Attribute-Based Encryption.
 
+10. Boneh, D., Sahai, A. and Waters, B. "Functional Encryption: Definitions and Challenges." *TCC 2011*, pp. 253-273. Formal framework for encryption where decryption reveals only a specified function of the plaintext.
+
 ### Quantum Computing
 
-10. Shor, P.W. "Algorithms for Quantum Computation: Discrete Logarithms and Factoring." *Proceedings of the 35th Annual Symposium on Foundations of Computer Science (FOCS '94)*, pp. 124-134, IEEE, 1994. Journal version: "Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer." *SIAM Journal on Computing*, vol. 26, no. 5, pp. 1484-1509, 1997. arXiv: quant-ph/9508027. The period-finding subroutine uses Quantum Fourier Transform to find the period of f(x) = a^x mod N.
+11. Shor, P.W. "Algorithms for Quantum Computation: Discrete Logarithms and Factoring." *Proceedings of the 35th Annual Symposium on Foundations of Computer Science (FOCS '94)*, pp. 124-134, IEEE, 1994. Journal version: "Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer." *SIAM Journal on Computing*, vol. 26, no. 5, pp. 1484-1509, 1997. arXiv: quant-ph/9508027. The period-finding subroutine uses Quantum Fourier Transform to find the period of f(x) = a^x mod N.
 
-11. Nielsen, M.A. and Chuang, I.L. *Quantum Computation and Quantum Information.* Cambridge University Press, 2000.
+12. Nielsen, M.A. and Chuang, I.L. *Quantum Computation and Quantum Information.* Cambridge University Press, 2000.
 
-12. Bloch, F. "Nuclear Induction." *Physical Review*, vol. 70, nos. 7-8, pp. 460-474, 1946. Origin of the Bloch equations; the "Bloch sphere" as a qubit visualization was named after this work but was formalized gradually by the quantum information community. No single paper introduced the Bloch sphere in its modern quantum computing form.
+13. Bloch, F. "Nuclear Induction." *Physical Review*, vol. 70, nos. 7-8, pp. 460-474, 1946. Origin of the Bloch equations; the "Bloch sphere" as a qubit visualization was named after this work but was formalized gradually by the quantum information community.
 
 ### Generative Models
 
-13. Goodfellow, I.J., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and Bengio, Y. "Generative Adversarial Nets." *Advances in Neural Information Processing Systems 27 (NeurIPS 2014)*, pp. 2672-2680, 2014. arXiv: 1406.2661. Introduced the adversarial framework: generator (generative) vs discriminator (formative) in a minimax game.
+14. Goodfellow, I.J., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and Bengio, Y. "Generative Adversarial Nets." *Advances in Neural Information Processing Systems 27 (NeurIPS 2014)*, pp. 2672-2680, 2014. arXiv: 1406.2661. Introduced the adversarial framework: generator (generative) vs discriminator (formative) in a minimax game.
 
 ### Emergence
 
-14. Holland, J.H. *Emergence: From Chaos to Order.* Reading, MA: Addison-Wesley/Perseus Books, 1998. ISBN: 0-201-14943-5. Also: Holland, J.H. "Emergence." *Philosophica*, vol. 59, pp. 11-40, 1997.
+15. Holland, J.H. *Emergence: From Chaos to Order.* Reading, MA: Addison-Wesley/Perseus Books, 1998. ISBN: 0-201-14943-5. Also: Holland, J.H. "Emergence." *Philosophica*, vol. 59, pp. 11-40, 1997.
 
-15. Kauffman, S.A. *The Origins of Order: Self-Organization and Selection in Evolution.* New York: Oxford University Press, 1993. ISBN: 0-19-507951-5. "Edge of chaos" thesis; Boolean network models showing spontaneous emergence of order.
+16. Kauffman, S.A. *The Origins of Order: Self-Organization and Selection in Evolution.* New York: Oxford University Press, 1993. ISBN: 0-19-507951-5.
 
 ### Gematria
 
-16. Scholem, G. *Kabbalah.* Jerusalem: Keter Publishing, 1974 (Meridian/Penguin reprint 1978). Extensive discussion of gematria; argues its rise resulted from adoption of Greek alphanumeric notation during the Second Temple period.
+17. Scholem, G. *Kabbalah.* Jerusalem: Keter Publishing, 1974 (Meridian/Penguin reprint 1978). Extensive discussion of gematria.
 
-17. Ouaknin, M.-A. *Le Livre brule: Lire le Talmud* (The Burnt Book). Paris: Lieu Commun, 1986 (English trans. Princeton UP, 1995). Discusses gematria within talmudic hermeneutics and the 32 rules of Rabbi Eliezer. First historical evidence of Hebrew letters as numerals: approximately 78 BCE. Gematria as hermeneutic method codified in the *Baraita of the Thirty-two Rules* (c. 200 CE).
+18. Ouaknin, M.-A. *Le Livre brule: Lire le Talmud* (The Burnt Book). Paris: Lieu Commun, 1986 (English trans. Princeton UP, 1995). Discusses gematria within talmudic hermeneutics and the 32 rules of Rabbi Eliezer. First historical evidence of Hebrew letters as numerals: approximately 78 BCE.
 
 ### Note on Intent-Based Cryptography
 
-No established academic paper uses the terms "intent-based cryptography" or "purpose-bound encryption" as formal cryptographic primitives. Attribute-Based Encryption [9] and Functional Encryption are the closest existing analogues, but they constrain WHO can decrypt, not HOW the encryption operates. Our use of intent as a keystream-shaping parameter is, to the best of our knowledge, novel. We are transparent about this claim and invite the community to identify any prior art we may have missed.
+No established academic paper uses the terms "intent-based cryptography" or "purpose-bound encryption" as formal cryptographic primitives. Attribute-Based Encryption [9] and Functional Encryption [10] are the closest existing analogues, and they are rigorously defined constructions with formal security guarantees. The framing we propose — naming a key-derivation input "intent" — is a pedagogical/UX contribution, not a new cryptographic primitive. We remain open to discovering related prior work.
 
 ---
 

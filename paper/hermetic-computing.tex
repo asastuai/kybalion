@@ -1,0 +1,366 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---- Packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{braket}          % Dirac notation
+\usepackage{booktabs}        % Professional tables
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{abstract}
+\usepackage{float}
+
+\geometry{margin=1in}
+
+% Prevent section titles from being orphaned at bottom of page
+\usepackage{needspace}
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-3.5ex \@plus -1ex \@minus -.2ex}%
+  {2.3ex \@plus.2ex}%
+  {\needspace{5\baselineskip}\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\needspace{4\baselineskip}\normalfont\large\bfseries}}
+\makeatother
+
+% Discourage widows and orphans
+\widowpenalty=10000
+\clubpenalty=10000
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=blue!70!black,
+  urlcolor=blue!70!black
+}
+
+% Prevent floating tables from drifting
+\usepackage[section]{placeins}
+
+% ---- Metadata ----
+\title{Hermetic Computing: A Reading of Cryptographic\\and Computational Primitives Through\\the Seven Hermetic Principles}
+\author{
+  Juan Cruz Maisu\\
+  Independent Researcher\\
+  Buenos Aires, Argentina\\
+  \texttt{github.com/asastuai}
+}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+
+% ---- Abstract ----
+\begin{abstract}
+We present Hermetic Computing, an interpretive framework that maps the Seven Hermetic Principles---attributed to Hermes Trismegistus and codified in the \textit{Kybalion} (1908)---onto established concepts in cryptography and quantum computing. Each principle is expressed as a Rust trait and paired with a corresponding computational analogue: Mentalism with information as substrate, Correspondence with structure-preserving maps (group homomorphism), Vibration with frequency-domain analysis (DFT), Polarity with continuous duals (qubits, spectral logic), Rhythm with cyclic computation and timing analysis, Causality with provenance systems, and Generation with generative-formative dynamics. We compose two illustrative cryptographic artifacts from these primitives: (1)~the \textit{Hermetic Hash}, a 256-bit hash function composed of seven alchemical stages, with a measured avalanche ratio of 0.5001 on the test set; and (2)~the \textit{Magnum Opus}, a stream cipher in which an arbitrary ``intent'' byte string is mixed into the key schedule, producing distinct keystreams for distinct intents. Both artifacts use floating-point arithmetic internally and have not been subjected to formal cryptanalysis; they are educational demonstrations, not production primitives. The contribution of this paper is framing, not cryptographic: it offers a vocabulary for reading existing cryptographic concepts through a hermetic lens, along with executable Rust illustrations. Rigorous formalizations of purpose-bound encryption exist in Attribute-Based and Functional Encryption; this work is adjacent to those lineages, not a replacement. An accompanying SDK is published at \texttt{crates.io/crates/intent-cipher}.
+
+\medskip
+\noindent\textbf{Keywords:} hermetic principles, homomorphic encryption, spectral logic, frequency-domain hashing, philosophy of computing
+\end{abstract}
+
+% ==================================================================
+\section{Introduction}
+% ==================================================================
+
+\subsection{Thesis}
+
+The Seven Hermetic Principles, formulated millennia before the invention of computers, can be read as structurally analogous to a range of modern cryptographic and quantum computing concepts. We demonstrate this reading not as proof but through implementation: each principle is formalized as a Rust trait, composed into illustrative artifacts, and tested for correctness. The mapping is interpretive; the code makes the analogy concrete enough to read and contest.
+
+\subsection{Background}
+
+The Hermetic tradition traces to Hermes Trismegistus, a syncretic figure combining the Greek Hermes with the Egyptian Thoth. The core teachings were transmitted through the \textit{Corpus Hermeticum} (1st--3rd century CE), the \textit{Emerald Tablet} (late 8th--early 9th century CE)~\cite{emerald}, and the \textit{Kybalion} (1908)~\cite{kybalion}, which codified seven principles: Mentalism, Correspondence, Vibration, Polarity, Rhythm, Cause and Effect, and Generation.
+
+These principles have been studied in philosophical and esoteric contexts but, to our knowledge, have not been expressed as executable computational primitives with direct computational analogues. This paper offers such an expression.
+
+\subsection{Prior Art}
+
+Tavares (2020)~\cite{tavares} applied hermetic axioms to software architecture without cryptographic application. Homomorphic encryption~\cite{gentry} and post-quantum cryptography~\cite{regev} are well-established fields with no connection to hermetic philosophy. Morgan (2018) drew parallels between hermeticism and quantum physics without computational implementation. We are not aware of prior work expressing the seven hermetic principles as executable computational primitives in the form presented here.
+
+\subsection{Contributions}
+
+\begin{enumerate}[nosep]
+  \item A Rust implementation of the seven hermetic principles as traits, with each paired to an established computational analogue.
+  \item Two illustrative cryptographic artifacts composed from those traits---a 256-bit hash (Hermetic Hash) and a stream cipher (Magnum Opus)---intended as pedagogical demonstrations, not production primitives.
+  \item A set of conceptual correspondences between hermetic vocabulary and existing computational concepts, each accompanied by executable code.
+\end{enumerate}
+
+\subsection{Positioning and Scope}
+
+This paper is a framing contribution, not a cryptographic one. The implementations use floating-point arithmetic and have not been subjected to formal cryptanalysis. They are appropriate as educational artifacts, illustrations, or entries in an interdisciplinary dialogue. They are not appropriate as production cryptography. See Section~\ref{sec:limitations} for a detailed discussion of limitations.
+
+% ==================================================================
+\section{The Seven Principles as Computational Primitives}
+% ==================================================================
+
+\subsection{Mentalism --- The Information Axiom}
+
+\textit{``The All is Mind; the Universe is Mental.''} --- The Kybalion, Ch.~VII
+
+Every computational entity can be reduced to information (\textsc{Essence}) and reconstructed from it. We define three planes of manifestation: Spiritual (pure potential), Mental (conceptual), and Physical (measured). The trait \texttt{Mentalism} requires \texttt{to\_essence()}, \texttt{from\_essence()}, and \texttt{plane()}. Corrupted information (NaN) cannot manifest---\texttt{from\_essence} returns \texttt{None}.
+
+\subsection{Correspondence --- The Homomorphism Principle}
+
+\textit{``As above, so below; as below, so above.''} --- The Emerald Tablet~\cite{emerald}
+
+A structure-preserving map between two domains. The trait \texttt{Correspondence<Above, Below>} defines \texttt{ascend} (below $\to$ above) and \texttt{descend} (above $\to$ below) with an associated \texttt{Gap} type representing information lost in translation.
+
+\textbf{An Additive Correspondence.} For an additive correspondence $h$:
+\begin{equation}
+  h(a) + h(b) = h(a + b)
+\end{equation}
+This is the defining property of a group homomorphism, and matches the additive part of homomorphic encryption~\cite{gentry}. The Principle of Correspondence mirrors the defining property of group homomorphism in its additive form.
+
+We implement three correspondences: Hebrew Gematria (word $\to$ number, a pre-modern hash-like mapping where descent requires context), Additive Homomorphism (structure-preserving), and Composed Correspondence (demonstrating transitivity across multiple planes).
+
+\subsection{Vibration --- The Frequency Principle}
+
+\textit{``Nothing rests; everything moves; everything vibrates.''} --- The Kybalion, Ch.~IX
+
+All information has a frequency signature. We implement a Discrete Fourier Transform that decomposes byte sequences into their constituent frequencies. The roundtrip data $\to$ spectrum $\to$ data is verified lossless. The DFT reveals hidden structure: a repeating pattern \texttt{[0,255,0,255...]} yields a dominant frequency of 0.50.
+
+\textbf{Technical finding:} Perfect reconstruction requires all $N$ frequency bins, not the Nyquist half. The full vibrational picture is required for materialization.
+
+\subsection{Polarity --- The Spectral Logic Principle}
+
+\textit{``Everything is dual; opposites are identical in nature, but different in degree.''} --- The Kybalion, Ch.~X
+
+Every type has a dual. Opposites are not boolean but extremes of a continuous spectrum. We define \texttt{Polarity} with \texttt{pole\_position()} returning a value in $[0,1]$ and \texttt{transmute()} moving along the spectrum.
+
+\textbf{Observation.} The qubit naturally satisfies the \texttt{Polarity} trait. $\ket{0}$ is the negative pole, $\ket{1}$ the positive pole, superposition is the spectrum between them, and the Bloch sphere~\cite{bloch} is a polar spectrum in 3D. The Hadamard gate is one involution among many that match the alchemical \textit{Solve et Coagula} pattern: $H\ket{0} = \ket{+}$ (dissolve) and $H\ket{+} = \ket{0}$ (reconstitute), with $H^2 = I$ (self-inverse).
+
+\textbf{Observation.} $\ket{+}$ and $\ket{-}$ have identical measurement probabilities but different global phase. Polarity and phase can be varied independently---standard quantum mechanics, usefully read as two ``axes'' rather than one.
+
+\subsection{Rhythm --- The Cyclic Computation Principle}
+
+\textit{``Everything flows, out and in; the pendulum-swing manifests in everything.''} --- The Kybalion, Ch.~XI
+
+All computation is cyclical. The hermetic Law of Neutralization---the master dampens the swing---maps directly to constant-time execution, where timing variance is eliminated to prevent side-channel attacks~\cite{sac}. Period detection via autocorrelation is the classical analogue of Shor's period-finding~\cite{shor}, which uses the Quantum Fourier Transform to break RSA.
+
+\subsection{Causality --- The Provenance Principle}
+
+\textit{``Every Cause has its Effect; every Effect has its Cause.''} --- The Kybalion, Ch.~XII
+
+Every value carries its complete causal history. The \texttt{Causal<T>} type wraps any value with origin (Prima or Derived), parent IDs, and depth. The \texttt{CausalChain} records and traces full lineage---structurally analogous to a blockchain where each block is causally linked to its predecessor~\cite{nakamoto}.
+
+\subsection{Generation --- The Creative Computation Principle}
+
+\textit{``Gender is in everything; everything has its Masculine and Feminine Principles.''} --- The Kybalion, Ch.~XIV
+
+Creation requires two complementary forces: generative (projects possibilities) and formative (selects and shapes). The \texttt{Generation} trait defines \texttt{generate()} and \texttt{form()}. We implement \texttt{KeyForge} for cryptographic key generation and \texttt{EmergentNumber} where composition can produce properties absent from parts: $\texttt{emerge}(2, 2) = 4$ gains the property \texttt{perfect\_square}, a compact illustration of a phenomenon long studied in complexity theory and systems science.
+
+% ==================================================================
+\section{The Hermetic Hash}
+% ==================================================================
+
+A 256-bit hash function composed through seven alchemical stages:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Stage} & \textbf{Operation} & \textbf{Principle} & \textbf{Function} \\
+\midrule
+I   & Calcination  & Mentalism       & Normalize input to 64 samples \\
+II  & Dissolution  & Vibration       & DFT into 64 frequency bins \\
+III & Separation   & Polarity        & Split into magnitude and phase \\
+IV  & Conjunction  & Generation      & Non-linear marriage of opposites \\
+V   & Fermentation & Rhythm          & 7 rounds, prime reaches [1,7,13,19,29,37,43] \\
+VI  & Distillation & Correspondence  & Fold 64$\to$32 via symmetric map \\
+VII & Coagulation  & Causality       & Crystallize via XOR-fold of f64 bits \\
+\bottomrule
+\end{tabular}
+\caption{The seven alchemical stages of the Hermetic Hash.}
+\label{tab:hash-stages}
+\end{table}
+
+\textbf{Results} (50 inputs, $\sim$100 bit-flip tests each):
+
+\begin{itemize}[nosep]
+  \item Avalanche ratio: \textbf{0.5001} (ideal: 0.5000, deviation: 0.015\%)
+  \item Byte distribution: $\chi^2 = 244.26$, 0 missing values out of 256
+  \item Collision resistance: 0 collisions in 1000 sequential inputs
+  \item Single-bit sensitivity: 52\% of output bits changed (ideal: 50\%)
+\end{itemize}
+
+The avalanche ratio satisfies the Strict Avalanche Criterion~\cite{sac} within statistical noise on the measured sample.
+
+\textbf{Caveat.} These metrics are single-platform. The internal use of floating-point arithmetic (DFT, $\sin$, $\cos$, f64 bit extraction at the coagulation stage) precludes bit-identical cross-platform output. The hash is appropriate as an illustration of how seven stages can compose into a mixing function; it is not appropriate as a production hash.
+
+% ==================================================================
+\section{The Magnum Opus: An Intent-Keyed Stream Cipher}
+% ==================================================================
+
+A stream cipher whose keystream is generated from the interaction of all seven principles. It takes two inputs: a \textbf{key} and an \textbf{intent} (an arbitrary byte string).
+
+\subsection{Architecture}
+
+Seven internal state components (one per principle) contribute to each output byte:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Essence} (Mentalism): key + intent reduced to $\mathbb{R}^{32}$
+  \item \textbf{Veil} (Correspondence): structure-preserving transform
+  \item \textbf{Spectrum} (Vibration): DFT-derived frequency state with feedback
+  \item \textbf{Poles} (Polarity): spectral positions evolving per byte
+  \item \textbf{Rhythms} (Rhythm): 32 oscillators with prime periods $\{2, 3, 5, \ldots, 131\}$
+  \item \textbf{Causal accumulator} (Causality): FNV-1a running hash of all output
+  \item \textbf{Seeds} (Generation): LCG expansion + formative masking
+\end{enumerate}
+
+\subsection{Property}
+
+Same key with different intent produces distinct keystreams. A matching intent decrypts correctly; a mismatched intent yields different bytes. This is the expected behaviour of any cipher whose key schedule incorporates additional input.
+
+\subsection{Framing}
+
+We use the name \textit{intent} for this input to emphasise a semantic use-case: an application that wants to distinguish encryption sessions by purpose may find this terminology legible. Functionally, however, \texttt{intent} behaves as additional key material---closer to a nonce or salt than to a semantic parameter. The cipher does not parse or evaluate the meaning of the intent string; it mixes its bytes into the key derivation.
+
+\subsection{Distinction from Rigorous Purpose-Bound Cryptography}
+
+Attribute-Based Encryption~\cite{abe} formally binds access policy to decryption: a decryption key is valid only if it satisfies a policy over attributes encoded at encryption time. Functional Encryption~\cite{fe} generalises this so that decryption reveals only a function of the plaintext. These constructions come with formal security definitions, proofs, and carefully designed algebraic machinery. The Magnum Opus does not belong to these lineages; it is a pedagogical demonstration of a semantic-nonce pattern, not a new cryptographic category.
+
+\subsection{Verified Properties}
+
+\begin{itemize}[nosep]
+  \item Perfect roundtrip for all tested messages (up to 10KB)
+  \item Wrong key: decryption fails (produces different bytes)
+  \item Mismatched intent: decryption fails (produces different bytes)
+  \item Keystream distribution: $<25$ max count per byte value in 1000 bytes ($>200$ unique values)
+  \item Causal state: unique after every byte produced
+  \item Deterministic on a single platform: same inputs always produce identical output
+\end{itemize}
+
+% ==================================================================
+\section{Conceptual Correspondences}
+% ==================================================================
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Hermetic Concept} & \textbf{Computational Analogue} & \textbf{Status} \\
+\midrule
+Correspondence (additive)  & Group homomorphism; additive HE~\cite{gentry} & Analogy via code \\
+Gematria                   & Hash function (many-to-one)                    & Pedagogical mapping \\
+Polarity spectrum          & Qubit on Bloch sphere~\cite{bloch}             & Trait satisfied \\
+Solve et Coagula           & Involutions (Hadamard: $H^2 = I$)              & Pattern match \\
+Vibration                  & Discrete Fourier Transform                     & Roundtrip implemented \\
+Pendulum neutralization    & Constant-time execution                        & Analogy \\
+Period of rhythm           & Shor's period-finding~\cite{shor}              & Analogy \\
+Causal chain               & Provenance / blockchain~\cite{nakamoto}        & Structural analogue \\
+Generative / Formative     & GAN~\cite{gan} / evolutionary algorithm        & Analogy \\
+\bottomrule
+\end{tabular}
+\caption{Conceptual correspondences between hermetic and computational concepts.}
+\label{tab:correspondences}
+\end{table}
+
+\subsection{Observations}
+
+These are observations that emerged while building the code, offered as pedagogical framings rather than novel results:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Polarity and phase are independent.} $\ket{+}$ and $\ket{-}$ have identical measurement probabilities but different global phase---a standard property of Hadamard-basis states, usefully read as two ``axes'' (polarity and vibration) varying independently.
+  \item \textbf{Composition can produce properties absent from parts.} $\texttt{EmergentNumber::emerge}(2, 2) = 4$ gains the property \texttt{perfect\_square}, which neither input had---a compact illustration of a phenomenon long studied in complexity theory and systems science.
+  \item \textbf{Naming a cipher's extra input as ``intent''.} Framing a nonce-like parameter as \textit{intent} is a UX and pedagogical choice that may help explain purpose-legible encryption to non-specialists. It is not a new cryptographic primitive.
+\end{enumerate}
+
+% ==================================================================
+\section{Speculative Framings: Post-Quantum Cryptography}
+% ==================================================================
+
+\textit{The following connections are offered as interpretive framings, not technical claims. They suggest vocabulary that may aid pedagogy or discussion; they do not constitute cryptographic contributions.}
+
+\medskip
+
+Lattice-based cryptography~\cite{regev} depends on the hardness of finding short vectors in high-dimensional lattices. In hermetic terms, the lattice exists in a higher plane where operations are tractable, but descending (finding the short vector) requires information lost in the Correspondence Gap. The Learning With Errors problem~\cite{regev} adds deliberate Vibration (noise) until the original frequency is unrecoverable. Shor's algorithm~\cite{shor} breaks classical cryptography by finding hidden Rhythm through quantum Vibration---three principles composing to solve what classical computation cannot.
+
+% ==================================================================
+\section{Limitations}
+\label{sec:limitations}
+% ==================================================================
+
+\begin{itemize}[nosep]
+  \item \textbf{Not formally cryptanalyzed.} The Hermetic Hash and Magnum Opus have been tested for correctness and basic quality metrics, not for security. They have not been subjected to differential, linear, or distinguishing analysis; keystream period has not been established; preimage and second-preimage resistance are not verified.
+  \item \textbf{Floating-point internals.} Both artifacts use f64, transcendental functions ($\sin$, $\cos$), and a DFT. This precludes bit-identical output across platforms, compilers, and math libraries. A production primitive would require a full reimplementation on integer arithmetic.
+  \item \textbf{Framing, not proof.} The connections drawn between hermetic principles and computational concepts are interpretive. They are meant to be read and discussed, not treated as mathematical theorems. The code makes the analogy concrete; it does not establish it formally.
+  \item \textbf{Post-quantum connection is conceptual.} Section~6 offers vocabulary, not implementation.
+  \item \textbf{Use audited libraries for real cryptography.} \texttt{ring}, \texttt{rustls}, \texttt{age}, \texttt{libsodium}, and other audited implementations should be preferred for any security-bearing application. The artifacts here are educational.
+\end{itemize}
+
+% ==================================================================
+\section{Conclusion}
+% ==================================================================
+
+The Seven Hermetic Principles offer a compact interpretive vocabulary for concepts that cryptography and quantum computing already express in their own languages. Expressing them as Rust traits makes the correspondences concrete enough to read, discuss, and contest. The two illustrative artifacts---the Hermetic Hash and the Magnum Opus---are educational compositions of those traits; they are not proposed as production primitives. The contribution here is framing: a vocabulary that may be useful for teaching, for interdisciplinary dialogue, or for those who already think through hermetic categories and want a way to connect that thinking to computation. Whether the vocabulary proves durable is for readers and time to decide.
+
+\medskip
+\noindent\textbf{Reproducibility:} All code and tests can be inspected and executed:
+\begin{verbatim}
+  git clone https://github.com/asastuai/kybalion && cargo test
+\end{verbatim}
+
+\noindent\textbf{Accompanying SDK:} The intent-keyed cipher is available as a zero-dependency Rust crate:
+\begin{verbatim}
+  cargo add intent-cipher
+\end{verbatim}
+
+\noindent\textbf{Interactive demonstration:} \url{https://asastuai.github.io/kybalion/}
+
+% ==================================================================
+% References
+% ==================================================================
+\begin{thebibliography}{15}
+
+\bibitem{emerald}
+\textit{The Emerald Tablet of Hermes Trismegistus.} In \textit{Kit\=ab Sirr al-Khal\=iqa}, attr.\ Bal\=inas, late 8th--early 9th c.\ CE. Studied in Holmyard, E.J. ``The Emerald Table.'' \textit{Nature} 112:525--526, 1923.
+
+\bibitem{kybalion}
+Three Initiates [W.W.\ Atkinson]. \textit{The Kybalion.} Yogi Publication Society, 1908. Attribution in Deslippe, P. \textit{The Kybalion: The Definitive Edition.} TarcherPerigee, 2011.
+
+\bibitem{tavares}
+Tavares, A.P. ``Hermetic Principles of Computing.'' 2020.
+
+\bibitem{gentry}
+Gentry, C. ``Fully Homomorphic Encryption Using Ideal Lattices.'' \textit{STOC~'09}, pp.~169--178, ACM, 2009. DOI:~10.1145/1536414.1536440.
+
+\bibitem{regev}
+Regev, O. ``On Lattices, Learning with Errors, Random Linear Codes, and Cryptography.'' \textit{STOC~'05}, pp.~84--93, 2005. 2018 G\"odel Prize.
+
+\bibitem{bloch}
+Bloch, F. ``Nuclear Induction.'' \textit{Physical Review} 70(7--8):460--474, 1946.
+
+\bibitem{sac}
+Webster, A.F. and Tavares, S.E. ``On the Design of S-Boxes.'' \textit{CRYPTO~'85}, LNCS 218, pp.~523--534, 1986. DOI:~10.1007/3-540-39799-X\_41.
+
+\bibitem{shor}
+Shor, P.W. ``Algorithms for Quantum Computation.'' \textit{FOCS~'94}, pp.~124--134, IEEE, 1994. Journal: \textit{SIAM J.\ Computing} 26(5):1484--1509, 1997.
+
+\bibitem{nakamoto}
+Nakamoto, S. ``Bitcoin: A Peer-to-Peer Electronic Cash System.'' 2008.
+
+\bibitem{abe}
+Sahai, A. and Waters, B. ``Fuzzy Identity-Based Encryption.'' \textit{EUROCRYPT 2005}, pp.~457--473.
+
+\bibitem{fe}
+Boneh, D., Sahai, A. and Waters, B. ``Functional Encryption: Definitions and Challenges.'' \textit{TCC 2011}, pp.~253--273.
+
+\bibitem{gan}
+Goodfellow, I.J. et al. ``Generative Adversarial Nets.'' \textit{NeurIPS 2014}, pp.~2672--2680.
+
+\bibitem{shannon}
+Shannon, C.E. ``Communication Theory of Secrecy Systems.'' \textit{Bell Syst.\ Tech.\ J.} 28(4):656--715, 1949.
+
+\bibitem{holland}
+Holland, J.H. \textit{Emergence: From Chaos to Order.} Addison-Wesley, 1998.
+
+\bibitem{scholem}
+Scholem, G. \textit{Kabbalah.} Keter Publishing, 1974.
+
+\end{thebibliography}
+
+\end{document}

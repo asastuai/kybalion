@@ -5,14 +5,16 @@
 
 ## Purpose
 
-This document formalizes the Seven Hermetic Principles as computational primitives.
-Not as metaphor. Not as aesthetic. As **operational foundations** for a new paradigm
-of computation — one that natively expresses transformation, correspondence, and
-emergent complexity.
+This document expresses the Seven Hermetic Principles as computational primitives —
+each principle paired with an existing computational analogue and formalized as a
+trait with operations and axioms. This is a framing contribution and a pedagogical
+specification, not a set of cryptographic or mathematical claims.
 
-The thesis: **the hermetic model of reality IS a computational model**, predating
-Turing by millennia. We are not mapping mysticism onto code — we are recognizing
-that the ancients described computation before machines existed.
+The thesis: **the hermetic model of reality can be read as structurally analogous
+to a computational model**. The ancients described structures whose shapes rhyme
+with structures we later formalized in mathematics and computer science. We use
+code to make that reading concrete; the code does not establish the analogy as a
+formal theorem.
 
 ---
 
@@ -88,15 +90,17 @@ class EmeraldTablet f where
 - `reflect :: Structure -> Plane -> Structure` — Mirror a structure to another plane
 - `analogy :: (a -> b) -> (c -> d)` — If f transforms a→b, find g that transforms c→d preserving structure
 
-**Computational Implication**: This is the foundation of **homomorphic encryption**.
-You operate on ciphertext (above) and the results correspond to operations on
-plaintext (below). The hermetic principle IS the mathematical property that makes
-FHE possible. This is not a metaphor — it's the same structure.
+**Computational Parallel**: This is structurally analogous to **homomorphic
+encryption**. Operations on ciphertext (above) correspond to operations on
+plaintext (below) — the defining property of FHE. The hermetic Principle of
+Correspondence and the mathematical property of (group) homomorphism share the
+same abstract shape. Gentry's FHE adds multiplicative structure on top; the
+additive case alone is the part we draw on here.
 
-**Post-Quantum Relevance**: Lattice-based cryptography depends on finding
-correspondences between lattice problems in different dimensions. The "above/below"
-relationship between high-dimensional lattice problems and their lower-dimensional
-projections is literally Correspondence.
+**Post-Quantum Relevance**: Lattice-based cryptography depends on relationships
+between lattice problems in different dimensions. The "above/below" framing maps
+pedagogically onto those projections — a vocabulary for explaining, not a
+technical claim.
 
 ---
 
@@ -140,8 +144,9 @@ resonate :: (Vibration a, Vibration b) => a -> b -> Maybe Harmony
 
 **Computational Implication**: This maps to **Fourier-domain computation**. Data has
 a frequency representation, and some operations are trivial in frequency domain
-that are intractable in spatial domain. Quantum computing operates natively in
-superposition — which IS vibration. A qubit is a vibrating state.
+that are intractable in spatial domain. Superposition and vibration share a common
+shape in this vocabulary — a qubit can usefully be read as a state with a phase
+structure.
 
 **Encoding Application**: Information can be encoded in its frequency signature.
 The same data at different "vibrations" (encodings) reveals different properties.
@@ -189,11 +194,11 @@ instance (Polar a, Polar b) => Polar (a, b) where
 - `reconcile :: Positive -> Negative -> Neutral` — Unite opposites (synthesis)
 - `degree :: a -> Pole -> Double` — Measure distance from a pole [0.0 - 1.0]
 
-**Computational Implication**: This replaces boolean logic with **spectral logic**.
-Instead of true/false, we have degree of truth — but NOT fuzzy logic (which is
-still rooted in boolean thinking). This is a spectrum where the poles themselves
-are transmutable. In quantum computing, a qubit IS this: |0⟩ and |1⟩ are poles,
-and the qubit exists on the spectrum between them (superposition).
+**Computational Implication**: This proposes **spectral logic** as an alternative
+vocabulary to boolean logic. Instead of true/false, we work with degree along a
+spectrum — distinct from fuzzy logic, in that the poles themselves are continuous
+endpoints rather than discrete truth values. A qubit fits this shape: |0⟩ and |1⟩
+are the poles, superposition is the spectrum between them.
 
 ---
 
@@ -233,10 +238,11 @@ class Rhythmic a where
 - `neutralize :: Rhythm -> a -> a` — Counteract the swing (mastery)
 - `entrain :: Rhythm -> a -> a` — Pull into the rhythm (influence)
 
-**Computational Implication**: This formalizes **scheduling, timing attacks,
-and temporal patterns** as first-class citizens. In cryptography, timing is
-everything — side-channel attacks exploit rhythm. A system aware of its own
-rhythms can neutralize them (constant-time execution IS hermetic neutralization).
+**Computational Implication**: This names **scheduling, timing attacks, and
+temporal patterns** as first-class citizens. In cryptography, timing is everything —
+side-channel attacks exploit rhythm. A system aware of its own rhythms can
+neutralize them: constant-time execution does in engineering what hermetic
+neutralization does in the vocabulary of this framework.
 
 ---
 
@@ -276,11 +282,12 @@ class Causality m where
 - `trace :: Causal a -> [Event]` — Reconstruct the full chain
 - `transcend :: Causal a -> Plane -> Causal a` — Become cause, not effect
 
-**Computational Implication**: This is a **provenance system** — every piece
-of data knows where it came from and what it affects. In blockchain, this is
-the transaction DAG. In security, this is audit logging made fundamental.
-Combined with Correspondence, you can trace causality ACROSS planes — 
-understanding how an action in one domain causes effects in another.
+**Computational Implication**: This describes a **provenance system** — every piece
+of data knows where it came from and what it affects. In blockchain, this is the
+transaction DAG. In security, this is audit logging made fundamental. Combined
+with Correspondence, the framework offers a vocabulary for tracing causality
+across planes — explaining how an action in one domain relates to effects in
+another.
 
 ---
 
@@ -324,10 +331,10 @@ class Emergent a where
 - `form :: [Possibility] -> Constraints -> Creation` — Collapse into form
 - `emerge :: Creation -> Creation -> Creation` — Combine to birth novelty
 
-**Computational Implication**: This is **generative computation** — GANs, 
-evolutionary algorithms, genetic programming. The generator/discriminator
-pattern in GANs IS the masculine/feminine creative dynamic. This principle
-also describes compilation (source→possibilities→optimized form) and 
+**Computational Implication**: This describes **generative computation** — GANs,
+evolutionary algorithms, genetic programming. The generator/discriminator pattern
+in GANs fits the generative/formative shape described by the Seventh Principle.
+The same shape shows up in compilation (source→possibilities→optimized form) and
 cryptographic key generation (entropy→candidates→valid keypair).
 
 ---
