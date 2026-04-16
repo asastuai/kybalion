@@ -583,7 +583,8 @@ textarea { resize: vertical; min-height: 56px; }
   <button class="nav-dot" onclick="goTo(2)"><span class="nav-dot-label">Avalanche</span></button>
   <button class="nav-dot" onclick="goTo(3)"><span class="nav-dot-label">Cipher</span></button>
   <button class="nav-dot" onclick="goTo(4)"><span class="nav-dot-label">Intent</span></button>
-  <button class="nav-dot" onclick="goTo(5)"><span class="nav-dot-label">Gematria</span></button>
+  <button class="nav-dot" onclick="goTo(5)"><span class="nav-dot-label">Qubit</span></button>
+  <button class="nav-dot" onclick="goTo(6)"><span class="nav-dot-label">Gematria</span></button>
 </div>
 
 <!-- ====================================
@@ -804,13 +805,71 @@ textarea { resize: vertical; min-height: 56px; }
   </div>
 
   <!-- ================================
-       PAGE 5 — GEMATRIA LAB
+       PAGE 5 — QUBIT VISUALIZATION
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner" style="padding: 28px 36px;">
+      <div class="fold-line"></div>
+
+      <h2 style="font-size: 1.6rem; margin-bottom: 6px;">V. The Qubit</h2>
+      <p style="font-size: 1rem; margin-bottom: 10px;">
+        The Principle of Polarity made visible. The glowing point is a qubit &mdash; it lives
+        between poles on the Bloch sphere. Apply gates to move it. Measure to collapse it.
+        Watch superposition dissolve and reconstitute.
+      </p>
+
+      <div style="display: flex; gap: 12px; height: calc(100% - 120px);">
+        <!-- Sphere -->
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative;">
+          <canvas id="bloch-viz" width="500" height="500" style="max-width: 100%; max-height: 100%;"></canvas>
+          <div id="qv-state" style="position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-family: var(--serif); font-size: 1.3rem; color: var(--gold); text-align: center;">|0&#10217;</div>
+        </div>
+
+        <!-- Controls -->
+        <div style="width: 200px; display: flex; flex-direction: column; gap: 8px; font-family: var(--serif);">
+          <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em;">Prepare</div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <button class="btn" style="padding:5px 10px;font-size:0.9rem;" onclick="qvSet(1,0,0,0)">|0&#10217;</button>
+            <button class="btn" style="padding:5px 10px;font-size:0.9rem;" onclick="qvSet(0,0,1,0)">|1&#10217;</button>
+            <button class="btn" style="padding:5px 10px;font-size:0.9rem;" onclick="qvSet(QS2,0,QS2,0)">|+&#10217;</button>
+            <button class="btn" style="padding:5px 10px;font-size:0.9rem;" onclick="qvSet(QS2,0,-QS2,0)">|-&#10217;</button>
+          </div>
+
+          <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px;">Gates</div>
+          <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;" onclick="qvH()"><strong>H</strong> &nbsp; Solve et Coagula</button>
+          <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;" onclick="qvX()"><strong>X</strong> &nbsp; Invert poles</button>
+          <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;" onclick="qvZ()"><strong>Z</strong> &nbsp; Phase flip</button>
+          <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;" onclick="qvS()"><strong>S</strong> &nbsp; Quarter turn</button>
+          <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;background:var(--gold-glow);border-color:var(--gold-dim);" onclick="qvMeasure()"><strong>Measure</strong> &nbsp; Collapse</button>
+
+          <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px;">Probability</div>
+          <div style="font-family: var(--mono); font-size: 0.8rem;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+              <span style="color:var(--ink-dim);min-width:24px;">|0&#10217;</span>
+              <div style="flex:1;height:6px;background:var(--parchment-edge);"><div id="qv-bar0" style="height:100%;background:var(--gold);width:100%;transition:width 0.5s;"></div></div>
+              <span id="qv-p0" style="color:var(--gold);min-width:36px;text-align:right;">100%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:var(--ink-dim);min-width:24px;">|1&#10217;</span>
+              <div style="flex:1;height:6px;background:var(--parchment-edge);"><div id="qv-bar1" style="height:100%;background:var(--gold);width:0%;transition:width 0.5s;"></div></div>
+              <span id="qv-p1" style="color:var(--gold);min-width:36px;text-align:right;">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="folio-number">V</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       PAGE 6 — GEMATRIA LAB
        ================================ -->
   <div class="folio">
     <div class="folio-inner">
       <div class="fold-line"></div>
 
-      <h2>V. Hebrew Gematria</h2>
+      <h2>VI. Hebrew Gematria</h2>
       <p>
         The Principle of Correspondence in its oldest form: words map to numbers,
         numbers map to meaning. A many-to-one function &mdash; ascending is deterministic,
@@ -852,7 +911,7 @@ textarea { resize: vertical; min-height: 56px; }
         </table>
       </div>
 
-      <div class="folio-number">V</div>
+      <div class="folio-number">VI</div>
     </div>
   </div>
 
@@ -1055,11 +1114,184 @@ letters.forEach(([l,n,v])=>{
 });
 
 // =========================================
+// QUBIT VISUALIZATION
+// =========================================
+const QS2 = 1 / Math.SQRT2;
+const QPI = Math.PI;
+const qCanvas = document.getElementById('bloch-viz');
+const qCtx = qCanvas.getContext('2d');
+
+let qar = 1, qai = 0, qbr = 0, qbi = 0;
+let qtar = 1, qtai = 0, qtbr = 0, qtbi = 0;
+let qAnimating = false, qAnimStart = 0;
+const Q_DUR = 600;
+let qTrail = [];
+
+// Particles
+let qParticles = [];
+for (let i = 0; i < 15; i++) {
+  qParticles.push({
+    angle: Math.random() * QPI * 2,
+    speed: 0.003 + Math.random() * 0.006,
+    radius: 0.15 + Math.random() * 0.25,
+    y: -1 + Math.random() * 2,
+    size: 1 + Math.random() * 1.5,
+    alpha: 0.1 + Math.random() * 0.2
+  });
+}
+
+function qMag(r, i) { return Math.sqrt(r*r + i*i); }
+function qPhase(r, i) { return Math.atan2(i, r); }
+
+function qBlochAngles() {
+  const theta = 2 * Math.acos(Math.min(1, qMag(qar, qai)));
+  const phi = qPhase(qbr, qbi) - qPhase(qar, qai);
+  return { theta, phi };
+}
+
+function qProject(x3, y3, z3, cx, cy, r) {
+  const t = performance.now() * 0.00008;
+  const ca = Math.cos(t), sa = Math.sin(t);
+  const rx = x3 * ca - y3 * sa;
+  const ry = x3 * sa + y3 * ca;
+  return [cx + (rx * 0.9 + ry * 0.25) * r, cy - (z3 * 0.9 - ry * 0.15) * r];
+}
+
+function qvSet(a, b, c, d) {
+  qtar=a; qtai=b; qtbr=c; qtbi=d;
+  qAnimStart=performance.now(); qAnimating=true;
+}
+function qvGate(m00r,m00i,m01r,m01i,m10r,m10i,m11r,m11i) {
+  const cr=qAnimating?qtar:qar, ci=qAnimating?qtai:qai;
+  const dr=qAnimating?qtbr:qbr, di=qAnimating?qtbi:qbi;
+  qtar=m00r*cr-m00i*ci+m01r*dr-m01i*di;
+  qtai=m00r*ci+m00i*cr+m01r*di+m01i*dr;
+  qtbr=m10r*cr-m10i*ci+m11r*dr-m11i*di;
+  qtbi=m10r*ci+m10i*cr+m11r*di+m11i*dr;
+  qAnimStart=performance.now(); qAnimating=true;
+}
+function qvH() { qvGate(QS2,0,QS2,0,QS2,0,-QS2,0); }
+function qvX() { qvGate(0,0,1,0,1,0,0,0); }
+function qvZ() { qvGate(1,0,0,0,0,0,-1,0); }
+function qvS() { qvGate(1,0,0,0,0,0,0,1); }
+function qvMeasure() {
+  const p0 = qMag(qar,qai)**2;
+  const r = Math.random() < p0 ? 0 : 1;
+  if(r===0){qtar=1;qtai=0;qtbr=0;qtbi=0;}
+  else{qtar=0;qtai=0;qtbr=1;qtbi=0;}
+  qAnimStart=performance.now(); qAnimating=true;
+}
+
+function qvGetName() {
+  const am=qMag(qar,qai), bm=qMag(qbr,qbi), e=0.03;
+  if(am>1-e&&bm<e) return '|0⟩';
+  if(am<e&&bm>1-e) return '|1⟩';
+  if(Math.abs(am-QS2)<e&&Math.abs(bm-QS2)<e) {
+    if(Math.abs(qbr-QS2)<e&&Math.abs(qbi)<e) return '|+⟩';
+    if(Math.abs(qbr+QS2)<e&&Math.abs(qbi)<e) return '|−⟩';
+  }
+  return `${am.toFixed(2)}|0⟩ + ${bm.toFixed(2)}|1⟩`;
+}
+
+function drawQubitViz() {
+  const now = performance.now();
+  if(qAnimating) {
+    let t = Math.min(1, (now-qAnimStart)/Q_DUR);
+    t = t*t*(3-2*t);
+    qar+=(qtar-qar)*t*0.3; qai+=(qtai-qai)*t*0.3;
+    qbr+=(qtbr-qbr)*t*0.3; qbi+=(qtbi-qbi)*t*0.3;
+    if(Math.abs(qar-qtar)<0.001&&Math.abs(qbr-qtbr)<0.001) {
+      qar=qtar;qai=qtai;qbr=qtbr;qbi=qtbi;qAnimating=false;
+    }
+  }
+
+  const w=qCanvas.width,h=qCanvas.height;
+  const cx=w/2,cy=h/2,R=Math.min(cx,cy)-30;
+  qCtx.clearRect(0,0,w,h);
+
+  // Particles
+  qParticles.forEach(p=>{
+    p.angle+=p.speed;
+    const px=Math.cos(p.angle)*p.radius, pz=Math.sin(p.angle)*p.radius;
+    const[sx,sy]=qProject(px,pz,p.y,cx,cy,R);
+    qCtx.globalAlpha=p.alpha*(0.5+0.5*Math.sin(now*0.002+p.angle));
+    qCtx.fillStyle='#8a6a18';
+    qCtx.beginPath();qCtx.arc(sx,sy,p.size,0,QPI*2);qCtx.fill();
+  });
+  qCtx.globalAlpha=1;
+
+  // Sphere
+  qCtx.strokeStyle='rgba(139,105,20,0.15)';qCtx.lineWidth=1;
+  qCtx.beginPath();qCtx.ellipse(cx,cy,R,R,0,0,QPI*2);qCtx.stroke();
+  qCtx.strokeStyle='rgba(139,105,20,0.08)';
+  qCtx.beginPath();qCtx.ellipse(cx,cy,R*0.9,R*0.22,0,0,QPI*2);qCtx.stroke();
+
+  // Vertical ellipse
+  qCtx.beginPath();
+  for(let t=0;t<=QPI*2;t+=0.05){const[sx,sy]=qProject(Math.cos(t),0,Math.sin(t),cx,cy,R);if(t===0)qCtx.moveTo(sx,sy);else qCtx.lineTo(sx,sy);}
+  qCtx.stroke();
+
+  // Axes
+  qCtx.strokeStyle='rgba(139,105,20,0.1)';qCtx.setLineDash([4,4]);
+  const[ztx,zty]=qProject(0,0,1.12,cx,cy,R),[zbx,zby]=qProject(0,0,-1.12,cx,cy,R);
+  qCtx.beginPath();qCtx.moveTo(ztx,zty);qCtx.lineTo(zbx,zby);qCtx.stroke();
+  const[xlx,xly]=qProject(-1.08,0,0,cx,cy,R),[xrx,xry]=qProject(1.08,0,0,cx,cy,R);
+  qCtx.beginPath();qCtx.moveTo(xlx,xly);qCtx.lineTo(xrx,xry);qCtx.stroke();
+  qCtx.setLineDash([]);
+
+  // Labels
+  qCtx.font='16px "Cormorant Garamond",serif';qCtx.fillStyle='rgba(106,78,4,0.5)';
+  qCtx.fillText('|0⟩',ztx-10,zty-8);qCtx.fillText('|1⟩',zbx-10,zby+18);
+  qCtx.fillText('|+⟩',xrx+4,xry+4);qCtx.fillText('|−⟩',xlx-22,xly+4);
+
+  // Bloch position
+  const{theta,phi}=qBlochAngles();
+  const bx=Math.sin(theta)*Math.cos(phi),by=Math.sin(theta)*Math.sin(phi),bz=Math.cos(theta);
+  const[sx,sy]=qProject(bx,by,bz,cx,cy,R);
+
+  // Trail
+  qTrail.push({x:sx,y:sy,t:now});
+  if(qTrail.length>50)qTrail.shift();
+  qTrail.forEach(pt=>{
+    const age=(now-pt.t)/1500;if(age>1)return;
+    qCtx.globalAlpha=(1-age)*0.35;qCtx.fillStyle='#8a6a18';
+    qCtx.beginPath();qCtx.arc(pt.x,pt.y,1.5+(1-age)*2,0,QPI*2);qCtx.fill();
+  });
+  qCtx.globalAlpha=1;
+
+  // Vector line
+  qCtx.strokeStyle='rgba(106,78,4,0.4)';qCtx.lineWidth=1.5;
+  qCtx.beginPath();qCtx.moveTo(cx,cy);qCtx.lineTo(sx,sy);qCtx.stroke();
+
+  // Glow
+  const gs=10+2*Math.sin(now*0.004);
+  const glow=qCtx.createRadialGradient(sx,sy,0,sx,sy,gs*2);
+  glow.addColorStop(0,'rgba(139,105,20,0.5)');glow.addColorStop(0.5,'rgba(139,105,20,0.1)');glow.addColorStop(1,'transparent');
+  qCtx.fillStyle=glow;qCtx.beginPath();qCtx.arc(sx,sy,gs*2,0,QPI*2);qCtx.fill();
+
+  // Core
+  qCtx.fillStyle='#6a4e04';qCtx.shadowColor='rgba(139,105,20,0.7)';qCtx.shadowBlur=15;
+  qCtx.beginPath();qCtx.arc(sx,sy,6,0,QPI*2);qCtx.fill();qCtx.shadowBlur=0;
+  qCtx.fillStyle='rgba(240,230,211,0.6)';qCtx.beginPath();qCtx.arc(sx,sy,2.5,0,QPI*2);qCtx.fill();
+
+  // Update UI
+  const am=qMag(qar,qai),bm=qMag(qbr,qbi),p0=am*am,p1=bm*bm;
+  document.getElementById('qv-state').textContent=qvGetName();
+  document.getElementById('qv-bar0').style.width=(p0*100)+'%';
+  document.getElementById('qv-bar1').style.width=(p1*100)+'%';
+  document.getElementById('qv-p0').textContent=(p0*100).toFixed(0)+'%';
+  document.getElementById('qv-p1').textContent=(p1*100).toFixed(0)+'%';
+
+  requestAnimationFrame(drawQubitViz);
+}
+
+// =========================================
 // INIT
 // =========================================
 document.addEventListener('DOMContentLoaded', () => {
   computeAvalanche();
   setTimeout(runIntentDemo, 200);
+  requestAnimationFrame(drawQubitViz);
 });
 </script>
 
