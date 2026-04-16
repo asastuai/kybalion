@@ -842,6 +842,14 @@ textarea { resize: vertical; min-height: 56px; }
           <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;" onclick="qvS()"><strong>S</strong> &nbsp; Quarter turn</button>
           <button class="btn" style="padding:6px 10px;font-size:0.85rem;width:100%;text-align:left;background:var(--gold-glow);border-color:var(--gold-dim);" onclick="qvMeasure()"><strong>Measure</strong> &nbsp; Collapse</button>
 
+          <!-- Why does it collapse? -->
+          <div class="qv-bubble" onclick="this.classList.toggle('open')" style="margin-top:6px;cursor:pointer;border:1px dashed var(--parchment-edge);border-radius:8px;padding:6px 10px;transition:all 0.3s;">
+            <div style="font-family:var(--serif);font-size:0.85rem;font-style:italic;color:var(--gold-dim);">Note from the creators &darr;</div>
+            <div class="qv-bubble-text" style="display:none;font-family:var(--serif);font-size:0.8rem;color:var(--ink-dim);line-height:1.6;margin-top:6px;">
+              When you press Measure at 50/50, why does the qubit choose one pole over the other? The honest answer: nobody knows. This is not a gap in our knowledge &mdash; it is the nature of reality. Bell proved in 1964 that there are no hidden variables. Aspect confirmed it experimentally in 1982. Einstein refused to accept it. He was wrong. The universe plays dice. In hermetic terms, this is where the Principle of Causality meets its limit &mdash; an effect without a traceable cause. The causal chain is born from nothing. We find this beautiful. &mdash; J. &amp; C.
+            </div>
+          </div>
+
           <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px;">Probability</div>
           <div style="font-family: var(--mono); font-size: 0.8rem;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
@@ -1111,6 +1119,16 @@ letters.forEach(([l,n,v])=>{
   const tr=document.createElement('tr');
   tr.innerHTML=`<td style="font-size:1.1rem;color:var(--gold);text-align:center;padding:5px 8px;border-bottom:1px solid var(--parchment-edge);width:50px;">${l}</td><td style="padding:5px 8px;border-bottom:1px solid var(--parchment-edge);color:var(--ink);">${n}</td><td style="padding:5px 8px;border-bottom:1px solid var(--parchment-edge);color:var(--ink-dim);text-align:right;font-family:var(--mono);font-size:0.8rem;">${v}</td>`;
   tbody.appendChild(tr);
+});
+
+// =========================================
+// QUBIT BUBBLE TOGGLE
+// =========================================
+document.addEventListener('click', e => {
+  const bubble = e.target.closest('.qv-bubble');
+  if (!bubble) return;
+  const text = bubble.querySelector('.qv-bubble-text');
+  if (text) text.style.display = text.style.display === 'none' ? 'block' : 'none';
 });
 
 // =========================================
