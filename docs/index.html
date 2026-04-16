@@ -36,14 +36,11 @@ html, body {
 .codex {
   display: flex;
   height: 100vh;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  cursor: grab;
 }
-
-.codex:active { cursor: grabbing; }
 
 .codex::-webkit-scrollbar { height: 4px; }
 .codex::-webkit-scrollbar-track { background: #2a2318; }
@@ -576,7 +573,7 @@ textarea { resize: vertical; min-height: 56px; }
 
 <!-- Keyboard hint -->
 <div class="key-hint">
-  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> or drag to turn pages
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to turn pages
 </div>
 
 <!-- Navigation dots -->
@@ -625,7 +622,7 @@ textarea { resize: vertical; min-height: 56px; }
         <a href="https://github.com/asastuai/kybalion" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-dim);">Source code</a>
       </p>
 
-      <div class="folio-hint">drag or press &rarr;</div>
+      <div class="folio-hint">press &rarr; to begin</div>
     </div>
   </div>
 
@@ -870,47 +867,6 @@ textarea { resize: vertical; min-height: 56px; }
 // =========================================
 const codex = document.getElementById('codex');
 const dots = document.querySelectorAll('.nav-dot');
-let isDragging = false;
-let startX, scrollStart;
-
-// Drag to scroll
-codex.addEventListener('mousedown', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
-  isDragging = true;
-  startX = e.pageX;
-  scrollStart = codex.scrollLeft;
-  codex.style.scrollBehavior = 'auto';
-});
-
-document.addEventListener('mousemove', e => {
-  if (!isDragging) return;
-  e.preventDefault();
-  const dx = e.pageX - startX;
-  codex.scrollLeft = scrollStart - dx;
-});
-
-document.addEventListener('mouseup', () => {
-  if (!isDragging) return;
-  isDragging = false;
-  codex.style.scrollBehavior = 'smooth';
-});
-
-// Touch support
-codex.addEventListener('touchstart', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  startX = e.touches[0].pageX;
-  scrollStart = codex.scrollLeft;
-  codex.style.scrollBehavior = 'auto';
-}, { passive: true });
-
-codex.addEventListener('touchmove', e => {
-  const dx = e.touches[0].pageX - startX;
-  codex.scrollLeft = scrollStart - dx;
-}, { passive: true });
-
-codex.addEventListener('touchend', () => {
-  codex.style.scrollBehavior = 'smooth';
-});
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
