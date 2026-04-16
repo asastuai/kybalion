@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermetic Computing — Scroll Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --parchment:      #f0e6d3;
+  --parchment-dark: #e0d2b8;
+  --parchment-edge: #c8b898;
+  --ink:            #110e08;
+  --ink-dim:        #332a1c;
+  --ink-faint:      #4a3f2e;
+  --gold:           #6a4e04;
+  --gold-dim:       #7a5c10;
+  --gold-glow:      rgba(139, 105, 20, 0.12);
+  --red-ink:        #6b2020;
+  --green-ink:      #2a5a2a;
+  --serif:          'Cormorant Garamond', 'Georgia', serif;
+  --mono:           'JetBrains Mono', 'Consolas', monospace;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #3a3225;
+}
+
+/* ========================================
+   SCROLL CONTAINER — horizontal snap
+   ======================================== */
+.codex {
+  display: flex;
+  height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  cursor: grab;
+}
+
+.codex:active { cursor: grabbing; }
+
+.codex::-webkit-scrollbar { height: 4px; }
+.codex::-webkit-scrollbar-track { background: #2a2318; }
+.codex::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+/* ========================================
+   EACH PAGE (folio)
+   ======================================== */
+.folio {
+  flex: 0 0 100vw;
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+}
+
+.folio-inner {
+  width: 100%;
+  max-width: 740px;
+  height: calc(100vh - 40px);
+  max-height: 960px;
+  background: var(--parchment);
+  position: relative;
+  overflow: hidden;
+  padding: 48px 52px;
+  box-shadow:
+    4px 0 12px rgba(0,0,0,0.15),
+    -2px 0 6px rgba(0,0,0,0.08),
+    inset 0 0 80px rgba(139, 105, 20, 0.04);
+}
+
+/* Parchment texture via gradient noise */
+.folio-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(180, 160, 120, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 30%, rgba(160, 140, 100, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 80%, rgba(170, 150, 110, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Page edge shadow (left side = spine) */
+.folio-inner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(139, 105, 20, 0.08), transparent);
+  pointer-events: none;
+}
+
+/* Subtle fold line */
+.folio-inner .fold-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(139, 105, 20, 0.06) 20%,
+    rgba(139, 105, 20, 0.06) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Page number */
+.folio-number {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.2em;
+}
+
+/* Page turn hint */
+.folio-hint {
+  position: absolute;
+  bottom: 24px;
+  right: 32px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  animation: hintPulse 3s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+.folio-inner h1 {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.folio-inner h2 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.folio-inner h3 {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 16px;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+
+.folio-inner p {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.folio-inner .subtitle {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--ink-dim);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 0.08em;
+}
+
+.folio-inner .tagline {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--ink-dim);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.folio-inner .epigraph {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  text-align: center;
+  border-top: 1px solid var(--parchment-edge);
+  border-bottom: 1px solid var(--parchment-edge);
+  padding: 20px 32px;
+  margin: 32px 0;
+  line-height: 1.8;
+}
+
+.folio-inner .epigraph cite {
+  display: block;
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin-top: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid var(--parchment-edge);
+  margin: 16px 0;
+}
+
+/* ========================================
+   INTERACTIVE ELEMENTS (on parchment)
+   ======================================== */
+label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  background: var(--parchment-dark);
+  border: 1px solid var(--parchment-edge);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, textarea:focus {
+  border-color: var(--gold);
+}
+
+textarea { resize: vertical; min-height: 56px; }
+
+.output-box {
+  background: var(--parchment-dark);
+  border: 1px solid var(--parchment-edge);
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  word-break: break-all;
+  color: var(--gold);
+  min-height: 36px;
+  line-height: 1.5;
+}
+
+.output-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 8px 20px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background: var(--gold-glow);
+  border-color: var(--gold);
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* ========================================
+   PIPELINE (on parchment)
+   ======================================== */
+.pipeline {
+  display: flex;
+  gap: 0;
+  margin: 20px 0;
+}
+
+.pipeline-stage {
+  flex: 1;
+  text-align: center;
+  padding: 10px 4px;
+  border: 1px solid var(--parchment-edge);
+  position: relative;
+  transition: all 0.4s;
+  cursor: help;
+}
+
+.pipeline-stage + .pipeline-stage { border-left: none; }
+
+.pipeline-stage.active {
+  background: var(--gold-glow);
+  border-color: var(--gold-dim);
+}
+
+.pipeline-stage.completed {
+  background: rgba(139, 105, 20, 0.04);
+}
+
+.pipeline-stage .stage-num {
+  font-family: var(--serif);
+  font-size: 0.75rem;
+  color: var(--gold-dim);
+  margin-bottom: 2px;
+}
+
+.pipeline-stage .stage-name {
+  font-family: var(--serif);
+  font-size: 0.75rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.pipeline-stage.active .stage-name,
+.pipeline-stage.completed .stage-name {
+  color: var(--gold);
+}
+
+.pipeline-stage .stage-principle {
+  font-family: var(--serif);
+  font-size: 0.7rem;
+  color: var(--ink-dim);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.pipeline-stage[title]:hover::before {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--parchment);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 5px 10px;
+  white-space: nowrap;
+  z-index: 10;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+/* ========================================
+   AVALANCHE BITS
+   ======================================== */
+.bit-diff-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin-top: 12px;
+}
+
+.bit-cell {
+  width: 9px;
+  height: 9px;
+  background: var(--parchment-edge);
+  transition: background 0.3s;
+}
+
+.bit-cell.flipped {
+  background: var(--gold);
+}
+
+.avalanche-stat {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  margin-top: 10px;
+}
+
+/* ========================================
+   HEBREW KEYBOARD
+   ======================================== */
+.hebrew-keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+  direction: rtl;
+}
+
+.hk-key {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--parchment-dark);
+  border: 1px solid var(--parchment-edge);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.hk-key:hover {
+  background: var(--gold-glow);
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+.hk-key:active {
+  transform: scale(0.92);
+}
+
+.hk-key .hk-val {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--parchment);
+  background: var(--ink);
+  padding: 2px 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hk-key {
+  position: relative;
+}
+
+.hk-key:hover .hk-val {
+  display: block;
+}
+
+/* ========================================
+   NAV DOTS
+   ======================================== */
+.nav-dots {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+  background: rgba(42, 35, 24, 0.85);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(240, 230, 211, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  padding: 0;
+}
+
+.nav-dot:hover { background: rgba(240, 230, 211, 0.6); }
+.nav-dot.active { background: var(--gold); transform: scale(1.3); }
+
+.nav-dot-label {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--parchment);
+  white-space: nowrap;
+  background: rgba(42, 35, 24, 0.9);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.nav-dot:hover .nav-dot-label { display: block; }
+
+/* ========================================
+   KEYBOARD HINT
+   ======================================== */
+.key-hint {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: rgba(240, 230, 211, 0.4);
+  z-index: 100;
+  letter-spacing: 0.05em;
+}
+
+.key-hint kbd {
+  display: inline-block;
+  border: 1px solid rgba(240, 230, 211, 0.2);
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin: 0 2px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 680px) {
+  .folio-inner {
+    padding: 40px 28px;
+  }
+  .folio-inner h1 { font-size: 1.8rem; }
+  .folio-inner h2 { font-size: 1.2rem; }
+  .folio-inner p { font-size: 0.95rem; }
+  .pipeline { flex-wrap: wrap; }
+  .pipeline-stage { flex: 1 1 30%; }
+  .key-hint { display: none; }
+  .nav-dots { bottom: 12px; padding: 6px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Keyboard hint -->
+<div class="key-hint">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> or drag to turn pages
+</div>
+
+<!-- Navigation dots -->
+<div class="nav-dots" id="nav-dots">
+  <button class="nav-dot active" onclick="goTo(0)"><span class="nav-dot-label">Cover</span></button>
+  <button class="nav-dot" onclick="goTo(1)"><span class="nav-dot-label">Hash</span></button>
+  <button class="nav-dot" onclick="goTo(2)"><span class="nav-dot-label">Avalanche</span></button>
+  <button class="nav-dot" onclick="goTo(3)"><span class="nav-dot-label">Cipher</span></button>
+  <button class="nav-dot" onclick="goTo(4)"><span class="nav-dot-label">Intent</span></button>
+  <button class="nav-dot" onclick="goTo(5)"><span class="nav-dot-label">Gematria</span></button>
+</div>
+
+<!-- ====================================
+     THE CODEX
+     ==================================== -->
+<div class="codex" id="codex">
+
+  <!-- ================================
+       PAGE 0 — COVER
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="fold-line"></div>
+
+      <h1>Hermetic Computing</h1>
+      <div class="subtitle">Interactive Playground</div>
+      <div class="tagline">Seven ancient principles. Seven cryptographic primitives.</div>
+
+      <div class="epigraph">
+        "The Principles of Truth are Seven; he who knows these, understandingly,
+        possesses the Magic Key before whose touch all the Doors of the Temple fly open."
+        <cite>The Kybalion</cite>
+      </div>
+
+      <p style="text-align: center; color: var(--ink-dim); font-size: 0.9rem; margin-top: 20px;">
+        This codex contains interactive demonstrations of the Hermetic Computing framework &mdash;
+        a system that formalizes the seven hermetic principles as cryptographic primitives in Rust.
+        87 tests. 0.5001 avalanche ratio. Everything compiles. Everything passes.
+      </p>
+
+      <hr class="separator">
+
+      <p style="text-align: center; font-size: 0.85rem; color: var(--ink-faint);">
+        <a href="https://asastuai.github.io/opus/" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-dim);">Read the full story</a>
+        &nbsp;&mdash;&nbsp;
+        <a href="https://github.com/asastuai/kybalion" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-dim);">Source code</a>
+      </p>
+
+      <div class="folio-hint">drag or press &rarr;</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       PAGE 1 — HASH LAB
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner">
+      <div class="fold-line"></div>
+
+      <h2>I. The Hermetic Hash</h2>
+      <p>
+        A 256-bit hash function built from the seven alchemical stages. Each stage maps to a
+        hermetic principle <em>and</em> a cryptographic operation. The result: an avalanche ratio
+        of 0.5001 &mdash; 0.015% from theoretical perfection.
+      </p>
+
+      <h3>Alchemical Pipeline</h3>
+      <div class="pipeline" id="hash-pipeline">
+        <div class="pipeline-stage" data-stage="0" title="Reduce input to informational essence">
+          <div class="stage-num">I</div>
+          <div class="stage-name">Calcination</div>
+          <div class="stage-principle">Mentalism</div>
+        </div>
+        <div class="pipeline-stage" data-stage="1" title="DFT: reveal hidden frequencies">
+          <div class="stage-num">II</div>
+          <div class="stage-name">Dissolution</div>
+          <div class="stage-principle">Vibration</div>
+        </div>
+        <div class="pipeline-stage" data-stage="2" title="Split magnitude and phase">
+          <div class="stage-num">III</div>
+          <div class="stage-name">Separation</div>
+          <div class="stage-principle">Polarity</div>
+        </div>
+        <div class="pipeline-stage" data-stage="3" title="As above, so below">
+          <div class="stage-num">IV</div>
+          <div class="stage-name">Conjunction</div>
+          <div class="stage-principle">Correspondence</div>
+        </div>
+        <div class="pipeline-stage" data-stage="4" title="Cyclic mixing, prime reaches">
+          <div class="stage-num">V</div>
+          <div class="stage-name">Fermentation</div>
+          <div class="stage-principle">Rhythm</div>
+        </div>
+        <div class="pipeline-stage" data-stage="5" title="Each byte depends on all prior">
+          <div class="stage-num">VI</div>
+          <div class="stage-name">Distillation</div>
+          <div class="stage-principle">Causality</div>
+        </div>
+        <div class="pipeline-stage" data-stage="6" title="Crystallize to final bytes">
+          <div class="stage-num">VII</div>
+          <div class="stage-name">Coagulation</div>
+          <div class="stage-principle">Generation</div>
+        </div>
+      </div>
+
+      <hr class="separator">
+
+      <label for="hash-input">Input</label>
+      <input type="text" id="hash-input" placeholder="Type anything..." oninput="computeHash()">
+      <div class="output-label">256-bit Hermetic Hash</div>
+      <div class="output-box" id="hash-output">
+        <span style="color: var(--ink-faint);">Awaiting input...</span>
+      </div>
+
+      <div class="folio-number">I</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       PAGE 2 — AVALANCHE
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner">
+      <div class="fold-line"></div>
+
+      <h2>II. The Avalanche</h2>
+      <p>
+        A good hash changes half its output bits when a single input bit changes.
+        This is the avalanche effect &mdash; a small cause cascades through the entire output.
+        The Hermetic Hash achieves a ratio of 0.5001. Perfection is 0.5000.
+      </p>
+
+      <hr class="separator">
+
+      <label for="avalanche-a">Input A</label>
+      <input type="text" id="avalanche-a" placeholder="hello" oninput="computeAvalanche()" value="hello">
+      <div style="height: 8px;"></div>
+      <label for="avalanche-b">Input B (change one letter)</label>
+      <input type="text" id="avalanche-b" placeholder="hallo" oninput="computeAvalanche()" value="hallo">
+
+      <div class="output-label">Hash A</div>
+      <div class="output-box" id="avalanche-hash-a"></div>
+      <div class="output-label">Hash B</div>
+      <div class="output-box" id="avalanche-hash-b"></div>
+
+      <div class="output-label">Bit Differences &mdash; gold = flipped</div>
+      <div class="bit-diff-display" id="avalanche-bits"></div>
+      <div class="avalanche-stat" id="avalanche-stat"></div>
+
+      <div class="folio-number">II</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       PAGE 3 — CIPHER LAB
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner">
+      <div class="fold-line"></div>
+
+      <h2>III. The Magnum Opus</h2>
+      <p>
+        The first stream cipher where <em>semantic intent</em> is a cryptographic parameter.
+        Same key, same plaintext, different purpose &mdash; completely different ciphertext.
+        The <em>why</em> of encryption shapes the <em>how</em>.
+      </p>
+
+      <hr class="separator">
+
+      <h3>Encipher</h3>
+      <label for="cipher-key">Key</label>
+      <input type="text" id="cipher-key" value="my_secret_key">
+      <div style="height: 8px;"></div>
+      <label for="cipher-intent">Intent</label>
+      <input type="text" id="cipher-intent" value="protect medical records">
+      <div style="height: 8px;"></div>
+      <label for="cipher-plaintext">Plaintext</label>
+      <textarea id="cipher-plaintext" rows="2">The truth shall set you free</textarea>
+      <div class="btn-row">
+        <button class="btn" onclick="doCipher()">Encipher</button>
+      </div>
+      <div class="output-label">Ciphertext (hex)</div>
+      <div class="output-box" id="cipher-output">
+        <span style="color: var(--ink-faint);">Press encipher...</span>
+      </div>
+
+      <div class="folio-number">III</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       PAGE 4 — INTENT DEMO
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner">
+      <div class="fold-line"></div>
+
+      <h2>IV. Intent Changes Everything</h2>
+      <p>
+        Same key. Same plaintext. Different purpose. Watch how the ciphertext changes completely.
+        The intent is not metadata &mdash; it is woven into the keystream itself. Wrong intent
+        decrypts to garbage.
+      </p>
+
+      <hr class="separator">
+
+      <label for="demo-key">Key</label>
+      <input type="text" id="demo-key" value="shared_key" oninput="runIntentDemo()">
+      <div style="height: 8px;"></div>
+      <label for="demo-plain">Plaintext</label>
+      <input type="text" id="demo-plain" value="sensitive data" oninput="runIntentDemo()">
+      <div style="height: 8px;"></div>
+      <label for="demo-intent1">Intent A</label>
+      <input type="text" id="demo-intent1" value="protect medical records" oninput="runIntentDemo()">
+      <div style="height: 8px;"></div>
+      <label for="demo-intent2">Intent B</label>
+      <input type="text" id="demo-intent2" value="conceal financial data" oninput="runIntentDemo()">
+
+      <div class="output-label">Ciphertext A</div>
+      <div class="output-box" id="demo-out-a"></div>
+      <div class="output-label">Ciphertext B</div>
+      <div class="output-box" id="demo-out-b"></div>
+      <div class="output-label">Match?</div>
+      <div class="output-box" id="demo-match"></div>
+
+      <div class="folio-number">IV</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       PAGE 5 — GEMATRIA LAB
+       ================================ -->
+  <div class="folio">
+    <div class="folio-inner">
+      <div class="fold-line"></div>
+
+      <h2>V. Hebrew Gematria</h2>
+      <p>
+        The Principle of Correspondence in its oldest form: words map to numbers,
+        numbers map to meaning. A many-to-one function &mdash; ascending is deterministic,
+        descending requires context. An ancient hash function, formalized as a Rust trait.
+      </p>
+
+      <hr class="separator">
+
+      <label for="gematria-input">Hebrew Text</label>
+      <input type="text" id="gematria-input" placeholder="אמת" dir="rtl"
+             style="font-size: 1.4rem; text-align: right; font-family: var(--serif);" oninput="computeGematria()">
+
+      <div class="hebrew-keyboard" id="hebrew-keyboard"></div>
+      <div style="display: flex; gap: 6px; margin-top: 6px;">
+        <button class="btn btn-small" onclick="document.getElementById('gematria-input').value='';computeGematria();" style="font-size: 0.7rem; padding: 4px 12px;">Clear</button>
+        <button class="btn btn-small" onclick="insertWord('אמת')" style="font-size: 0.7rem; padding: 4px 12px;">אמת Truth</button>
+        <button class="btn btn-small" onclick="insertWord('חיים')" style="font-size: 0.7rem; padding: 4px 12px;">חיים Life</button>
+        <button class="btn btn-small" onclick="insertWord('שלום')" style="font-size: 0.7rem; padding: 4px 12px;">שלום Peace</button>
+      </div>
+
+      <div id="gematria-result" style="font-family: var(--serif); font-size: 3rem; color: var(--gold); text-align: center; padding: 28px 0 8px;">
+        <span style="color: var(--ink-faint); font-size: 1rem;">Enter Hebrew text above</span>
+      </div>
+      <div id="gematria-breakdown" style="font-family: var(--mono); font-size: 0.78rem; color: var(--ink-dim); text-align: center;"></div>
+
+      <hr class="separator">
+
+      <h3>Reference &mdash; Standard Values</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-family: var(--serif); font-size: 0.9rem;">
+          <thead>
+            <tr>
+              <th style="text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--parchment-edge); color: var(--gold); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Letter</th>
+              <th style="text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--parchment-edge); color: var(--gold); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Name</th>
+              <th style="text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--parchment-edge); color: var(--gold); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Value</th>
+            </tr>
+          </thead>
+          <tbody id="gematria-table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="folio-number">V</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ====================================
+     JAVASCRIPT
+     ==================================== -->
+<script>
+// =========================================
+// CODEX NAVIGATION
+// =========================================
+const codex = document.getElementById('codex');
+const dots = document.querySelectorAll('.nav-dot');
+let isDragging = false;
+let startX, scrollStart;
+
+// Drag to scroll
+codex.addEventListener('mousedown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+  isDragging = true;
+  startX = e.pageX;
+  scrollStart = codex.scrollLeft;
+  codex.style.scrollBehavior = 'auto';
+});
+
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  e.preventDefault();
+  const dx = e.pageX - startX;
+  codex.scrollLeft = scrollStart - dx;
+});
+
+document.addEventListener('mouseup', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  codex.style.scrollBehavior = 'smooth';
+});
+
+// Touch support
+codex.addEventListener('touchstart', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  startX = e.touches[0].pageX;
+  scrollStart = codex.scrollLeft;
+  codex.style.scrollBehavior = 'auto';
+}, { passive: true });
+
+codex.addEventListener('touchmove', e => {
+  const dx = e.touches[0].pageX - startX;
+  codex.scrollLeft = scrollStart - dx;
+}, { passive: true });
+
+codex.addEventListener('touchend', () => {
+  codex.style.scrollBehavior = 'smooth';
+});
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight') goTo(getCurrentPage() + 1);
+  if (e.key === 'ArrowLeft') goTo(getCurrentPage() - 1);
+});
+
+function getCurrentPage() {
+  return Math.round(codex.scrollLeft / window.innerWidth);
+}
+
+function goTo(n) {
+  const total = document.querySelectorAll('.folio').length;
+  n = Math.max(0, Math.min(n, total - 1));
+  codex.style.scrollBehavior = 'smooth';
+  codex.scrollTo({ left: n * window.innerWidth });
+}
+
+// Update dots on scroll
+codex.addEventListener('scroll', () => {
+  const page = getCurrentPage();
+  dots.forEach((d, i) => d.classList.toggle('active', i === page));
+});
+
+// =========================================
+// HASH (same simplified JS as original)
+// =========================================
+function textToBytes(t) { return new TextEncoder().encode(t); }
+function bytesToHex(b) { return Array.from(b).map(x => x.toString(16).padStart(2,'0')).join(''); }
+
+function calcination(data) {
+  const s = new Float64Array(32);
+  const primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131];
+  for (let i = 0; i < data.length; i++) { s[i%32] += data[i]*(i+1); s[(i*7)%32] ^= data[i]; }
+  for (let i = 0; i < 32; i++) s[i] += primes[i]*(data.length+1);
+  return s;
+}
+function dissolution(s) {
+  const N=s.length, f=new Float64Array(N);
+  for(let k=0;k<N;k++){let r=0;for(let n=0;n<N;n++)r+=s[n]*Math.cos(2*Math.PI*k*n/N);f[k]=r;}
+  return f;
+}
+function separation(s) {
+  const r=new Float64Array(32);
+  for(let i=0;i<32;i++){const p=Math.abs(s[i]),n=Math.abs(s[31-i]);r[i]=p-n+Math.sin(p*n*0.001)*256;}
+  return r;
+}
+function conjunction(s) {
+  const r=new Float64Array(32);
+  for(let i=0;i<16;i++){const a=s[i],b=s[i+16];r[i]=a*Math.cos(b*0.01)+b*Math.sin(a*0.01);r[i+16]=b*Math.cos(a*0.01)+a*Math.sin(b*0.01);}
+  return r;
+}
+function fermentation(s) {
+  const r=new Float64Array(32);
+  for(let round=0;round<4;round++){for(let i=0;i<32;i++){const p=s[(i+31)%32],n=s[(i+1)%32];r[i]=s[i]+Math.sin(p*0.1)*Math.cos(n*0.1)*100+Math.sin((round+1)*s[i]*0.001)*50;}for(let i=0;i<32;i++)s[i]=r[i];}
+  return r;
+}
+function distillation(s) {
+  const r=new Float64Array(32);let a=0;
+  for(let i=0;i<32;i++){a+=s[i];r[i]=s[i]+Math.sin(a*0.0001)*128;a=a*1.0001+r[i]*0.01;}
+  return r;
+}
+function coagulation(s) {
+  const o=new Uint8Array(32);
+  for(let i=0;i<32;i++){let v=Math.sin(s[i]*0.001)*1e8;v=((v%256)+256)%256;o[i]=Math.floor(v)&0xFF;}
+  return o;
+}
+function hermeticHash(input) {
+  const d=typeof input==='string'?textToBytes(input):input;
+  let s=calcination(d);s=dissolution(s);s=separation(s);s=conjunction(s);s=fermentation(s);s=distillation(s);
+  return coagulation(s);
+}
+
+let pipelineTimer=null;
+function animatePipeline(cb) {
+  const stages=document.querySelectorAll('#hash-pipeline .pipeline-stage');
+  stages.forEach(s=>{s.classList.remove('active','completed');});
+  if(pipelineTimer)clearInterval(pipelineTimer);
+  let c=0;
+  pipelineTimer=setInterval(()=>{if(c>0)stages[c-1].classList.replace('active','completed');if(c<7){stages[c].classList.add('active');c++;}else{clearInterval(pipelineTimer);pipelineTimer=null;if(cb)cb();}},80);
+}
+
+function computeHash() {
+  const input=document.getElementById('hash-input').value;
+  const out=document.getElementById('hash-output');
+  if(!input){out.innerHTML='<span style="color:var(--ink-faint);">Awaiting input...</span>';document.querySelectorAll('#hash-pipeline .pipeline-stage').forEach(s=>s.classList.remove('active','completed'));return;}
+  animatePipeline(()=>{out.textContent=bytesToHex(hermeticHash(input));});
+}
+
+function computeAvalanche() {
+  const a=document.getElementById('avalanche-a').value,b=document.getElementById('avalanche-b').value;
+  if(!a||!b)return;
+  const hA=hermeticHash(a),hB=hermeticHash(b);
+  document.getElementById('avalanche-hash-a').textContent=bytesToHex(hA);
+  document.getElementById('avalanche-hash-b').textContent=bytesToHex(hB);
+  const bitsEl=document.getElementById('avalanche-bits');bitsEl.innerHTML='';
+  let flipped=0;
+  for(let i=0;i<32;i++){const x=hA[i]^hB[i];for(let bit=7;bit>=0;bit--){const c=document.createElement('div');c.className='bit-cell';if((x>>bit)&1){c.classList.add('flipped');flipped++;}bitsEl.appendChild(c);}}
+  document.getElementById('avalanche-stat').textContent=`${flipped}/256 bits flipped (${(flipped/256*100).toFixed(1)}%) — ratio: ${(flipped/256).toFixed(4)}`;
+}
+
+// =========================================
+// CIPHER
+// =========================================
+function generateKeystream(key,intent,len) {
+  const seed=hermeticHash(key+'::'+intent);
+  const stream=new Uint8Array(len),state=new Float64Array(32);
+  for(let i=0;i<32;i++)state[i]=seed[i];
+  for(let i=0;i<len;i++){const idx=i%32;state[idx]=(state[idx]*1.0001+Math.sin(state[(idx+1)%32]*0.01+i)*128);state[(idx+7)%32]+=Math.cos(state[idx]*0.001)*64;const v=Math.sin(state[idx]*0.0001+state[(idx+13)%32]*0.00001)*1e8;stream[i]=(((v%256)+256)%256)&0xFF;}
+  return stream;
+}
+function encipher(key,intent,plain) {
+  const d=textToBytes(plain),s=generateKeystream(key,intent,d.length),c=new Uint8Array(d.length);
+  for(let i=0;i<d.length;i++)c[i]=d[i]^s[i];return c;
+}
+function doCipher() {
+  const k=document.getElementById('cipher-key').value,i=document.getElementById('cipher-intent').value,p=document.getElementById('cipher-plaintext').value;
+  if(!k||!i||!p)return;
+  document.getElementById('cipher-output').textContent=bytesToHex(encipher(k,i,p));
+}
+function runIntentDemo() {
+  const k=document.getElementById('demo-key').value,p=document.getElementById('demo-plain').value;
+  const i1=document.getElementById('demo-intent1').value,i2=document.getElementById('demo-intent2').value;
+  if(!k||!p||!i1||!i2)return;
+  const h1=bytesToHex(encipher(k,i1,p)),h2=bytesToHex(encipher(k,i2,p));
+  document.getElementById('demo-out-a').textContent=h1;
+  document.getElementById('demo-out-b').textContent=h2;
+  const m=document.getElementById('demo-match');
+  m.innerHTML=i1===i2?'<span style="color:var(--gold);">Same intent = identical ciphertext</span>':'<span style="color:var(--green-ink);">Different intent = completely different ciphertext</span>';
+}
+
+// =========================================
+// GEMATRIA
+// =========================================
+const HV={'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,'י':10,'כ':20,'ך':20,'ל':30,'מ':40,'ם':40,'נ':50,'ן':50,'ס':60,'ע':70,'פ':80,'ף':80,'צ':90,'ץ':90,'ק':100,'ר':200,'ש':300,'ת':400};
+const HN={'א':'Aleph','ב':'Bet','ג':'Gimel','ד':'Dalet','ה':'He','ו':'Vav','ז':'Zayin','ח':'Chet','ט':'Tet','י':'Yod','כ':'Kaf','ך':'Final Kaf','ל':'Lamed','מ':'Mem','ם':'Final Mem','נ':'Nun','ן':'Final Nun','ס':'Samekh','ע':'Ayin','פ':'Pe','ף':'Final Pe','צ':'Tsade','ץ':'Final Tsade','ק':'Qof','ר':'Resh','ש':'Shin','ת':'Tav'};
+
+function computeGematria() {
+  const input=document.getElementById('gematria-input').value.trim();
+  const res=document.getElementById('gematria-result'),bd=document.getElementById('gematria-breakdown');
+  if(!input){res.innerHTML='<span style="color:var(--ink-faint);font-size:1rem;">Enter Hebrew text above</span>';bd.textContent='';return;}
+  let total=0;const parts=[];let err=false;
+  for(const ch of input){if(ch===' '||ch==='\u200F'||ch==='\u200E')continue;const v=HV[ch];if(v!==undefined){total+=v;parts.push(`${ch}(${v})`);}else err=true;}
+  if(err&&parts.length===0){res.innerHTML='<span style="color:var(--red-ink);font-size:0.9rem;">No Hebrew characters found</span>';bd.textContent='';return;}
+  res.textContent=total;
+  bd.innerHTML=parts.join(' + ')+(err?' <span style="color:var(--red-ink);">(some characters ignored)</span>':'');
+}
+
+// Build hebrew keyboard
+const keyboard=document.getElementById('hebrew-keyboard');
+const keyLetters=[
+  ['א',1],['ב',2],['ג',3],['ד',4],['ה',5],['ו',6],['ז',7],['ח',8],['ט',9],
+  ['י',10],['כ',20],['ך',20],['ל',30],['מ',40],['ם',40],['נ',50],['ן',50],
+  ['ס',60],['ע',70],['פ',80],['ף',80],['צ',90],['ץ',90],
+  ['ק',100],['ר',200],['ש',300],['ת',400]
+];
+keyLetters.forEach(([l,v])=>{
+  const btn=document.createElement('button');
+  btn.className='hk-key';
+  btn.innerHTML=`${l}<span class="hk-val">${v}</span>`;
+  btn.onclick=()=>insertLetter(l);
+  keyboard.appendChild(btn);
+});
+
+function insertLetter(letter) {
+  const input=document.getElementById('gematria-input');
+  input.value+=letter;
+  computeGematria();
+  input.focus();
+}
+
+function insertWord(word) {
+  const input=document.getElementById('gematria-input');
+  input.value=word;
+  computeGematria();
+}
+
+// Build gematria table
+const tbody=document.getElementById('gematria-table-body');
+const letters=[['א','Aleph',1],['ב','Bet',2],['ג','Gimel',3],['ד','Dalet',4],['ה','He',5],['ו','Vav',6],['ז','Zayin',7],['ח','Chet',8],['ט','Tet',9],['י','Yod',10],['כ / ך','Kaf',20],['ל','Lamed',30],['מ / ם','Mem',40],['נ / ן','Nun',50],['ס','Samekh',60],['ע','Ayin',70],['פ / ף','Pe',80],['צ / ץ','Tsade',90],['ק','Qof',100],['ר','Resh',200],['ש','Shin',300],['ת','Tav',400]];
+letters.forEach(([l,n,v])=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td style="font-size:1.1rem;color:var(--gold);text-align:center;padding:5px 8px;border-bottom:1px solid var(--parchment-edge);width:50px;">${l}</td><td style="padding:5px 8px;border-bottom:1px solid var(--parchment-edge);color:var(--ink);">${n}</td><td style="padding:5px 8px;border-bottom:1px solid var(--parchment-edge);color:var(--ink-dim);text-align:right;font-family:var(--mono);font-size:0.8rem;">${v}</td>`;
+  tbody.appendChild(tr);
+});
+
+// =========================================
+// INIT
+// =========================================
+document.addEventListener('DOMContentLoaded', () => {
+  computeAvalanche();
+  setTimeout(runIntentDemo, 200);
+});
+</script>
+
+</body>
+</html>
