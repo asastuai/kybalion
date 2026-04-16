@@ -155,45 +155,45 @@ html, body {
    ======================================== */
 .folio-inner h1 {
   font-family: var(--serif);
-  font-size: 2.4rem;
+  font-size: 3.2rem;
   font-weight: 700;
   color: var(--gold);
   text-align: center;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .folio-inner h2 {
   font-family: var(--serif);
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--ink);
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .folio-inner h3 {
   font-family: var(--serif);
-  font-size: 1.05rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--gold);
   margin-top: 16px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   letter-spacing: 0.05em;
 }
 
 .folio-inner p {
   font-family: var(--serif);
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   color: var(--ink);
   line-height: 1.8;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .folio-inner .subtitle {
   font-family: var(--serif);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-style: italic;
   color: var(--ink-dim);
   text-align: center;
@@ -203,7 +203,7 @@ html, body {
 
 .folio-inner .tagline {
   font-family: var(--serif);
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: var(--ink-dim);
   text-align: center;
   margin-bottom: 40px;
@@ -212,7 +212,7 @@ html, body {
 .folio-inner .epigraph {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   color: var(--ink-dim);
   text-align: center;
   border-top: 1px solid var(--parchment-edge);
@@ -225,7 +225,7 @@ html, body {
 .folio-inner .epigraph cite {
   display: block;
   font-style: normal;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--ink-faint);
   margin-top: 8px;
   letter-spacing: 0.15em;
@@ -244,7 +244,7 @@ html, body {
 label {
   display: block;
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--ink);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -258,8 +258,8 @@ input[type="text"], textarea {
   border: 1px solid var(--parchment-edge);
   color: var(--ink);
   font-family: var(--mono);
-  font-size: 0.82rem;
-  padding: 8px 12px;
+  font-size: 1rem;
+  padding: 10px 14px;
   outline: none;
   transition: border-color 0.3s;
 }
@@ -273,23 +273,23 @@ textarea { resize: vertical; min-height: 56px; }
 .output-box {
   background: var(--parchment-dark);
   border: 1px solid var(--parchment-edge);
-  padding: 10px 12px;
+  padding: 12px 14px;
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   word-break: break-all;
   color: var(--gold);
-  min-height: 36px;
+  min-height: 40px;
   line-height: 1.5;
 }
 
 .output-label {
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   color: var(--ink-dim);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  margin-bottom: 4px;
-  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-top: 12px;
   font-weight: 500;
 }
 
@@ -298,8 +298,8 @@ textarea { resize: vertical; min-height: 56px; }
   border: 1px solid var(--gold-dim);
   color: var(--gold);
   font-family: var(--mono);
-  font-size: 0.8rem;
-  padding: 8px 20px;
+  font-size: 1rem;
+  padding: 10px 24px;
   cursor: pointer;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -352,14 +352,14 @@ textarea { resize: vertical; min-height: 56px; }
 
 .pipeline-stage .stage-num {
   font-family: var(--serif);
-  font-size: 0.75rem;
+  font-size: 1rem;
   color: var(--gold-dim);
   margin-bottom: 2px;
 }
 
 .pipeline-stage .stage-name {
   font-family: var(--serif);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   color: var(--ink);
   line-height: 1.3;
 }
@@ -371,7 +371,7 @@ textarea { resize: vertical; min-height: 56px; }
 
 .pipeline-stage .stage-principle {
   font-family: var(--serif);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   color: var(--ink-dim);
   margin-top: 2px;
   font-style: italic;
@@ -420,6 +420,67 @@ textarea { resize: vertical; min-height: 56px; }
   font-size: 0.75rem;
   color: var(--gold);
   margin-top: 10px;
+}
+
+/* ========================================
+   HEBREW KEYBOARD
+   ======================================== */
+.hebrew-keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+  direction: rtl;
+}
+
+.hk-key {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--parchment-dark);
+  border: 1px solid var(--parchment-edge);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.hk-key:hover {
+  background: var(--gold-glow);
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+.hk-key:active {
+  transform: scale(0.92);
+}
+
+.hk-key .hk-val {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--parchment);
+  background: var(--ink);
+  padding: 2px 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hk-key {
+  position: relative;
+}
+
+.hk-key:hover .hk-val {
+  display: block;
 }
 
 /* ========================================
@@ -764,8 +825,13 @@ textarea { resize: vertical; min-height: 56px; }
       <label for="gematria-input">Hebrew Text</label>
       <input type="text" id="gematria-input" placeholder="אמת" dir="rtl"
              style="font-size: 1.4rem; text-align: right; font-family: var(--serif);" oninput="computeGematria()">
-      <div style="font-size: 0.8rem; color: var(--ink-faint); margin-top: 4px;">
-        Try: אמת (Truth = 441) &nbsp;|&nbsp; חיים (Life = 68) &nbsp;|&nbsp; שלום (Peace = 376)
+
+      <div class="hebrew-keyboard" id="hebrew-keyboard"></div>
+      <div style="display: flex; gap: 6px; margin-top: 6px;">
+        <button class="btn btn-small" onclick="document.getElementById('gematria-input').value='';computeGematria();" style="font-size: 0.7rem; padding: 4px 12px;">Clear</button>
+        <button class="btn btn-small" onclick="insertWord('אמת')" style="font-size: 0.7rem; padding: 4px 12px;">אמת Truth</button>
+        <button class="btn btn-small" onclick="insertWord('חיים')" style="font-size: 0.7rem; padding: 4px 12px;">חיים Life</button>
+        <button class="btn btn-small" onclick="insertWord('שלום')" style="font-size: 0.7rem; padding: 4px 12px;">שלום Peace</button>
       </div>
 
       <div id="gematria-result" style="font-family: var(--serif); font-size: 3rem; color: var(--gold); text-align: center; padding: 28px 0 8px;">
@@ -992,6 +1058,35 @@ function computeGematria() {
   if(err&&parts.length===0){res.innerHTML='<span style="color:var(--red-ink);font-size:0.9rem;">No Hebrew characters found</span>';bd.textContent='';return;}
   res.textContent=total;
   bd.innerHTML=parts.join(' + ')+(err?' <span style="color:var(--red-ink);">(some characters ignored)</span>':'');
+}
+
+// Build hebrew keyboard
+const keyboard=document.getElementById('hebrew-keyboard');
+const keyLetters=[
+  ['א',1],['ב',2],['ג',3],['ד',4],['ה',5],['ו',6],['ז',7],['ח',8],['ט',9],
+  ['י',10],['כ',20],['ך',20],['ל',30],['מ',40],['ם',40],['נ',50],['ן',50],
+  ['ס',60],['ע',70],['פ',80],['ף',80],['צ',90],['ץ',90],
+  ['ק',100],['ר',200],['ש',300],['ת',400]
+];
+keyLetters.forEach(([l,v])=>{
+  const btn=document.createElement('button');
+  btn.className='hk-key';
+  btn.innerHTML=`${l}<span class="hk-val">${v}</span>`;
+  btn.onclick=()=>insertLetter(l);
+  keyboard.appendChild(btn);
+});
+
+function insertLetter(letter) {
+  const input=document.getElementById('gematria-input');
+  input.value+=letter;
+  computeGematria();
+  input.focus();
+}
+
+function insertWord(word) {
+  const input=document.getElementById('gematria-input');
+  input.value=word;
+  computeGematria();
 }
 
 // Build gematria table
