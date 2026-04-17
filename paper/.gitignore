@@ -11,3 +11,13 @@
 
 # Puppeteer screenshot tooling
 node_modules/
+
+# Private operational notes (local reference only, not for public repo)
+SUBMISSION-*.md
+preview-*.mjs
+verify-*.mjs
+preview-*.png
+opus-*.png
+crates-*.png
+pdfpage-*.png
+onward-page-*.png
