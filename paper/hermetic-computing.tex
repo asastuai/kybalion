@@ -153,7 +153,7 @@ Every value carries its complete causal history. The \texttt{Causal<T>} type wra
 
 \textit{``Gender is in everything; everything has its Masculine and Feminine Principles.''} --- The Kybalion, Ch.~XIV
 
-Creation requires two complementary forces: generative (projects possibilities) and formative (selects and shapes). The \texttt{Generation} trait defines \texttt{generate()} and \texttt{form()}. We implement \texttt{KeyForge} for cryptographic key generation and \texttt{EmergentNumber} where composition can produce properties absent from parts: $\texttt{emerge}(2, 2) = 4$ gains the property \texttt{perfect\_square}, a compact illustration of a phenomenon long studied in complexity theory and systems science.
+Creation requires two complementary forces: generative (projects possibilities) and formative (selects and shapes). The \texttt{Generation} trait defines \texttt{generate()} and \texttt{form()}. We implement \texttt{KeyForge} for cryptographic key generation and \texttt{EmergentNumber} where composition can produce properties absent from parts: \texttt{emerge(2,~2) = 4} gains the property \texttt{perfect\_square}, a compact illustration of a phenomenon long studied in complexity theory and systems science.
 
 % ==================================================================
 \section{The Hermetic Hash}
@@ -267,7 +267,7 @@ These are observations that emerged while building the code, offered as pedagogi
 
 \begin{enumerate}[nosep]
   \item \textbf{Polarity and phase are independent.} $\ket{+}$ and $\ket{-}$ have identical measurement probabilities but different global phase---a standard property of Hadamard-basis states, usefully read as two ``axes'' (polarity and vibration) varying independently.
-  \item \textbf{Composition can produce properties absent from parts.} $\texttt{EmergentNumber::emerge}(2, 2) = 4$ gains the property \texttt{perfect\_square}, which neither input had---a compact illustration of a phenomenon long studied in complexity theory and systems science.
+  \item \textbf{Composition can produce properties absent from parts.} \texttt{EmergentNumber::emerge(2,~2) = 4} gains the property \texttt{perfect\_square}, which neither input had---a compact illustration of a phenomenon long studied in complexity theory and systems science.
   \item \textbf{Naming a cipher's extra input as ``intent''.} Framing a nonce-like parameter as \textit{intent} is a UX and pedagogical choice that may help explain purpose-legible encryption to non-specialists. It is not a new cryptographic primitive.
 \end{enumerate}
 
