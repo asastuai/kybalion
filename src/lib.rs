@@ -3,8 +3,9 @@
 //
 // "The lips of wisdom are closed, except to the ears of Understanding."
 //
-// The Seven Principles of Hermes Trismegistus, formalized as computational
-// primitives in Rust. Not metaphor. Not aesthetic. Operational.
+// The Seven Principles of Hermes Trismegistus, expressed as Rust traits
+// paired with established computational analogues. A reading, illustrated
+// in executable code — a research artifact, not production cryptography.
 // ============================================================================
 
 pub mod principles;

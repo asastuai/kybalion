@@ -18,7 +18,7 @@
 //   1. Revealing the hidden vibrational structure of the input (Vibration)
 //   2. Transmuting that structure through polar inversion (Polarity)
 //   3. Folding the transmuted vibrations through correspondence (Correspondence)
-//   4. The output IS the input transformed across planes (Mentalism)
+//   4. The output is the input transformed across planes (Mentalism)
 //
 // The hermetic model gives us a REASON for each operation:
 //   - Diffusion comes from Vibration (frequency spreading)

@@ -184,7 +184,7 @@ impl<T: fmt::Debug + Clone> fmt::Display for Causal<T> {
 // ============================================================================
 
 /// A CausalChain records the complete history of causation.
-/// This is the blockchain before blockchain — an immutable sequence of
+/// This resembles a blockchain in shape — an immutable sequence of
 /// causal events, each linked to its predecessors.
 #[derive(Debug)]
 pub struct CausalChain {

@@ -5,8 +5,9 @@
 // Axiom: For any structure that exists at one level of abstraction, there
 // exists a structure-preserving mapping (homomorphism) to every other level.
 //
-// This is the mathematical backbone of homomorphic encryption.
-// The hermetic principle IS the property that makes FHE possible.
+// This mirrors the mathematical backbone of homomorphic encryption.
+// The hermetic Principle of Correspondence shares the structural property
+// that HE depends on (additive case).
 // ============================================================================
 
 use std::fmt::Debug;
@@ -15,11 +16,11 @@ use std::fmt::Debug;
 ///
 /// The key insight: operations performed "above" (in one domain) produce
 /// results that correspond to operations performed "below" (in another).
-/// This is not metaphor — it's the exact definition of homomorphism.
+/// This shares the exact algebraic shape of a group homomorphism.
 ///
 /// In cryptography: encrypt(a + b) == encrypt(a) + encrypt(b)
 /// In hermeticism: transform(above) corresponds to transform(below)
-/// Same. Structure.
+/// The structure rhymes.
 pub trait Correspondence<Above, Below> {
     /// The mapping error — what's lost in translation between planes
     type Gap: Debug;

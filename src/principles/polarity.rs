@@ -5,15 +5,15 @@
 //  in degree; extremes meet."
 //
 // Axiom: Every type has a dual. Opposites are not booleans — they are extremes
-// of a continuous spectrum. The KEY insight: the opposites are THE SAME THING
-// at different degrees. Heat and cold are both temperature. Love and hate are
+// of a continuous spectrum. The KEY insight: opposites are identical in nature,
+// different only in degree. Heat and cold are both temperature. Love and hate are
 // both passion. Courage and fear are both arousal.
 //
 // Connection to quantum computing:
-// - A qubit IS a polar spectrum: |0⟩ and |1⟩ are the poles
+// - A qubit fits this shape: |0⟩ and |1⟩ are the poles
 // - Superposition is a position BETWEEN the poles
 // - Measurement is forced polarization — collapsing to one pole
-// - The Bloch sphere is literally this: a spectral space between poles
+// - The Bloch sphere exhibits this shape: a spectral space between poles
 // - Quantum gates TRANSMUTE — they move the qubit along the spectrum
 //
 // This principle replaces boolean logic with spectral logic.
@@ -259,7 +259,7 @@ impl Qubit {
 
     /// Apply a Hadamard gate — the ultimate transmutation.
     /// Takes a pure state and puts it in superposition (and vice versa).
-    /// This is the alchemical solve et coagula of quantum computing.
+    /// This echoes the alchemical solve et coagula pattern in quantum computing.
     pub fn hadamard(&self) -> Self {
         // Simplified Hadamard on the Bloch sphere
         if (self.theta - 0.0).abs() < 1e-10 {
@@ -430,7 +430,7 @@ mod tests {
 
     #[test]
     fn opposites_are_same_nature() {
-        // The KEY hermetic insight: opposites are the same thing
+        // The KEY hermetic insight: opposites share the same nature, different degree
         let cold = SpectralValue::full_negative("Temperature", "Cold", "Hot");
         let hot = SpectralValue::full_positive("Temperature", "Cold", "Hot");
 
