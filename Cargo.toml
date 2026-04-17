@@ -5,7 +5,7 @@ edition = "2021"
 description = "Hermetic Computing Framework — The Seven Principles as computational primitives"
 license = "MIT"
 repository = "https://github.com/asastuai/kybalion"
-authors = ["Juan <openclaw>"]
+authors = ["Juan Cruz Maisu"]
 keywords = ["cryptography", "hermetic", "hash", "post-quantum"]
 categories = ["cryptography"]
 

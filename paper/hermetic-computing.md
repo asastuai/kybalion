@@ -1,6 +1,6 @@
 ---
 title: "Hermetic Computing: A Reading of Cryptographic and Computational Primitives Through the Seven Hermetic Principles"
-author: "Juan (OpenClaw)"
+author: "Juan Cruz Maisu"
 date: "April 2026"
 abstract: |
   We present Hermetic Computing, an interpretive framework that maps the Seven
