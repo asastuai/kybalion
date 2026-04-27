@@ -197,5 +197,21 @@ MIT
 
 ---
 
+## Author and body of work
+
+Juan Cruz Maisu — `juancmaisu@outlook.com` — [github.com/asastuai](https://github.com/asastuai). Independent researcher, Buenos Aires, Argentina.
+
+This framework is part of an evolving body of work:
+
+- [Proof of Context (papers)](https://github.com/asastuai/proof-of-context) — v0.6 framework + v0.1 applied to verifiable inference
+- [Proof of Context — reference implementation](https://github.com/asastuai/proof-of-context-impl) — Rust crate
+- [SUR Protocol](https://github.com/asastuai/sur-protocol) — perp DEX with agent-native execution layer
+- [Qwen3 14B inference benchmark](https://github.com/asastuai/qwen-cloud-benchmark) — empirical study
+- [Hermetic Computing](https://github.com/asastuai/kybalion) — this repository
+
+**Status:** open to research-engineering and applied-research roles in inference attestation, decentralized ML infrastructure, agent-native systems, and adjacent fields. Remote, full-time, any timezone.
+
+---
+
 *"The lips of wisdom are closed, except to the ears of Understanding."*
 *— The Kybalion*
