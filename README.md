@@ -2,7 +2,7 @@
 
 **A computational reading of the Seven Hermetic Principles as cryptographic and quantum-computing concepts, implemented in Rust.**
 
-A research artifact and educational framework — not production cryptography.
+A research artifact and educational framework, not production cryptography.
 
 **[Try the Interactive Playground](https://asastuai.github.io/kybalion/)** | [Whitepaper](WHITEPAPER.md) | [Genesis](GENESIS.md) | [Research](RESEARCH.md) | [Paper (draft)](paper/hermetic-computing.md)
 
@@ -18,7 +18,7 @@ Dependencies:    1 (num-traits)
 
 ## What this is
 
-A computational exploration of the Seven Hermetic Principles (Kybalion, 1908) through implementation. Each principle is framed as a Rust trait and mapped to an established computational or cryptographic concept. The mapping is a *reading* — the code illustrates the correspondence, it does not establish it as a mathematical theorem.
+A computational exploration of the Seven Hermetic Principles (Kybalion, 1908) through implementation. Each principle is framed as a Rust trait and mapped to an established computational or cryptographic concept. The mapping is a *reading*. The code illustrates the correspondence, it does not establish it as a mathematical theorem.
 
 | Hermetic Principle | Computational Analogue | Implementation |
 |---|---|---|
@@ -40,11 +40,11 @@ A hash composed of seven stages drawn from alchemical language:
 Calcination → Dissolution → Separation → Conjunction → Fermentation → Distillation → Coagulation
 ```
 
-Measured avalanche ratio of 0.5001 on the test set. Uses `f64`, `sin`, `cos`, and a DFT internally — so the output is **not guaranteed bit-identical across platforms or libm implementations**. Appropriate as a demonstration of how the seven stages can compose into a mixing function; inappropriate as a production hash. Not subjected to differential, linear, or preimage analysis.
+Measured avalanche ratio of 0.5001 on the test set. Uses `f64`, `sin`, `cos`, and a DFT internally, so the output is **not guaranteed bit-identical across platforms or libm implementations**. Appropriate as a demonstration of how the seven stages can compose into a mixing function; inappropriate as a production hash. Not subjected to differential, linear, or preimage analysis.
 
 ### The Magnum Opus (Stream Cipher, illustrative)
 
-A stream cipher where an "intent" — an arbitrary byte string supplied alongside the key — is mixed into the key schedule and thus into the keystream.
+A stream cipher where an "intent" (an arbitrary byte string supplied alongside the key) is mixed into the key schedule and thus into the keystream.
 
 ```rust
 // Same key, different intent → different keystream → different ciphertext
@@ -57,9 +57,9 @@ let wrong = decipher(b"my_key", b"wrong intent", &c1);
 assert_ne!(plaintext, wrong);
 ```
 
-**What this actually is.** Functionally, `intent` is additional key material — closer to a nonce than to a semantic policy. The cipher does not interpret the *meaning* of the intent string; it hashes its bytes into the key derivation. Framing that input as "intent" is a naming/UX choice, not a new cryptographic primitive.
+**What this actually is.** Functionally, `intent` is additional key material, closer to a nonce than to a semantic policy. The cipher does not interpret the *meaning* of the intent string; it hashes its bytes into the key derivation. Framing that input as "intent" is a naming/UX choice, not a new cryptographic primitive.
 
-**What this is not.** Cryptographic constructions that bind purpose or policy to encryption in a rigorous sense — Attribute-Based Encryption (Sahai–Waters, 2005), Functional Encryption (Boneh–Sahai–Waters, 2011) — are formally defined and substantially more rigorous than this artifact. This work is not in that lineage; it is an illustrative sketch.
+**What this is not.** Cryptographic constructions that bind purpose or policy to encryption in a rigorous sense (Attribute-Based Encryption from Sahai–Waters 2005, Functional Encryption from Boneh–Sahai–Waters 2011) are formally defined and substantially more rigorous than this artifact. This work is not in that lineage; it is an illustrative sketch.
 
 ---
 
@@ -77,7 +77,7 @@ veil(a) + veil(b) = veil(a + b)   // when the map is linear
 
 ### The qubit as a polar entity
 
-|0⟩ and |1⟩ sit at the endpoints of a continuous spectrum; superposition lives between them. The `Qubit` type satisfies `trait Polarity` — a compatible description, not a discovery.
+|0⟩ and |1⟩ sit at the endpoints of a continuous spectrum; superposition lives between them. The `Qubit` type satisfies `trait Polarity` (a compatible description, not a discovery).
 
 ### Hadamard as *Solve et Coagula*
 
@@ -147,7 +147,7 @@ src/
 
 ## Scope and Limitations
 
-- **Not formally cryptanalyzed.** The 87 passing tests verify correctness — roundtrips, determinism on a single platform, absence of trivial collisions on 1000 inputs, avalanche on a sample. They do **not** verify: keystream period, linear or differential resistance, distinguishing-attack margins, preimage or second-preimage resistance, or behaviour under adversarial inputs.
+- **Not formally cryptanalyzed.** The 87 passing tests verify correctness (roundtrips, determinism on a single platform, absence of trivial collisions on 1000 inputs, avalanche on a sample). They do **not** verify: keystream period, linear or differential resistance, distinguishing-attack margins, preimage or second-preimage resistance, or behaviour under adversarial inputs.
 - **Floating-point internals.** Both the hash and the cipher use `f64`, transcendental functions, and a DFT. Output is not guaranteed bit-identical across platforms, compilers, or math libraries. Reworking on integer arithmetic is on the roadmap.
 - **"Intent-aware" is a framing, not a cryptographic category.** See the Magnum Opus section above.
 - **Do not use this for real-world encryption or hashing.**
@@ -158,11 +158,11 @@ src/
 
 Adjacent work read while building this:
 
-- **Tavares (2020)** — hermetic axioms in software architecture (not cryptography).
-- **Gentry (2009)** — fully homomorphic encryption; we borrow only the vocabulary of structure preservation.
-- **Sahai & Waters (2005); Boneh, Sahai & Waters (2011)** — Attribute-Based / Functional Encryption; formally bind policy and function to cryptographic operations. These are the rigorous cousins of the "intent" framing.
-- **Regev (2005)** — Learning With Errors / lattice-based cryptography.
-- **Philosophical / interdisciplinary** — Morgan (2018) on hermeticism and quantum physics; writings on Kabbalah and computation.
+- **Tavares (2020)**: hermetic axioms in software architecture (not cryptography).
+- **Gentry (2009)**: fully homomorphic encryption; we borrow only the vocabulary of structure preservation.
+- **Sahai & Waters (2005); Boneh, Sahai & Waters (2011)**: Attribute-Based / Functional Encryption; formally bind policy and function to cryptographic operations. These are the rigorous cousins of the "intent" framing.
+- **Regev (2005)**: Learning With Errors / lattice-based cryptography.
+- **Philosophical / interdisciplinary**: Morgan (2018) on hermeticism and quantum physics; writings on Kabbalah and computation.
 
 We are not aware of prior work expressing the seven hermetic principles as Rust traits with executable crypto-style demonstrations. That is the framing contribution of this project. It is not a cryptographic contribution.
 
@@ -184,7 +184,7 @@ Full narrative in [Genesis](GENESIS.md). Technical write-up in the [Whitepaper](
 - [x] 87 correctness tests
 - [x] Whitepaper (draft)
 - [x] Interactive playground
-- [ ] Integer-only reimplementation of hash and cipher — see [INTEGER-REWORK.md](INTEGER-REWORK.md) for design intent and contribution invitation
+- [ ] Integer-only reimplementation of hash and cipher (please see [INTEGER-REWORK.md](INTEGER-REWORK.md) for design intent and contribution invitation)
 - [ ] Formal cryptanalysis (period, bias, differential, distinguishing)
 - [ ] Paper repositioned for a philosophy-of-computing / interdisciplinary venue
 - [ ] Python / TypeScript bindings (gated on the integer rework)
@@ -199,15 +199,15 @@ MIT
 
 ## Author and body of work
 
-Juan Cruz Maisu — `juancmaisu@outlook.com` — [github.com/asastuai](https://github.com/asastuai). Independent researcher, Buenos Aires, Argentina.
+Juan Cruz Maisu, `juancmaisu@outlook.com`, [github.com/asastuai](https://github.com/asastuai). Independent researcher, Buenos Aires, Argentina.
 
 This framework is part of an evolving body of work:
 
-- [Proof of Context (papers)](https://github.com/asastuai/proof-of-context) — v0.6 framework + v0.1 applied to verifiable inference
-- [Proof of Context — reference implementation](https://github.com/asastuai/proof-of-context-impl) — Rust crate
-- [SUR Protocol](https://github.com/asastuai/sur-protocol) — perp DEX with agent-native execution layer
-- [intent-cipher](https://crates.io/crates/intent-cipher) — published crate, stream cipher with intent-keyed schedule
-- [Hermetic Computing](https://github.com/asastuai/kybalion) — this repository
+- [Proof of Context (papers)](https://github.com/asastuai/proof-of-context): v0.6 framework + v0.1 applied to verifiable inference
+- [Proof of Context reference implementation](https://github.com/asastuai/proof-of-context-impl): Rust crate
+- [SUR Protocol](https://github.com/asastuai/sur-protocol): perp DEX with agent-native execution layer
+- [intent-cipher](https://crates.io/crates/intent-cipher): published crate, stream cipher with intent-keyed schedule
+- [Hermetic Computing](https://github.com/asastuai/kybalion): this repository
 
 **Status:** open to research-engineering and applied-research roles in inference attestation, decentralized ML infrastructure, agent-native systems, and adjacent fields. Remote, full-time, any timezone.
 
